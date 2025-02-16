@@ -1,21 +1,16 @@
-import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react-swc';
-import path from 'path';
-import { componentTagger } from 'lovable-tagger';
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react-swc";
+import path from "path";
 
-// https://vitejs.dev/config/
-export default defineConfig(({ mode }) => ({
-  base: '', // ✅ Remove the GitHub Pages base path
-  server: {
-    host: '::',
-    port: 8080,
+export default defineConfig({
+  base: "", // ✅ Ensure base is empty for Vercel
+  plugins: [react()],
+  build: {
+    outDir: "dist", // ✅ Ensure correct output directory
   },
-  plugins: [react(), mode === 'development' && componentTagger()].filter(
-    Boolean
-  ),
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './src'),
+      "@": path.resolve(__dirname, "./src"),
     },
   },
-}));
+});
