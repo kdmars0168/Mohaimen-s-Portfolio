@@ -87,6 +87,30 @@ const testimonials: Testimonial[] = [
       'Mohaimen is a very smart and capable young man. He is very detail oriented and a perfectionist in his work and was a valuable asset on my team.',
     ],
   },
+  {
+    name: 'Md Ali Zawad',
+    position: 'PMP® | MBA | Project Manager',
+    company: 'Axentec by Robi Axiata',
+    image: '/ali.png',
+    text: [
+      'I had the pleasure of working with Mohaimen Rashid during his tenure as a Business Analyst at Selise Digital Platforms, where he played a crucial role in supporting an ERP project, valued at more than half-a-million Euros for a Swiss security company. Despite it being his first professional role, Mohaimen quickly adapted to the fast-paced environment and demonstrated strong analytical skills, attention to detail, and a proactive approach to problem-solving.',
+      'The Security ERP project was a large-scale initiative aimed at streamlining workforce management, security personnel scheduling, and operational workflows. Mohaimen actively contributed by gathering and refining requirements, documenting business processes, and collaborating with developers and QA teams to ensure the successful development of key features. His ability to understand complex system requirements and communicate effectively with stakeholders played a significant role in keeping the project on track.',
+      'He showed great initiative in understanding the security industry’s unique challenges and worked diligently to align the ERP solution with business needs. His structured approach to problem-solving, adaptability, and willingness to take ownership of tasks made him a reliable and valuable team member.',
+      'I am confident that Mohaimen will continue to grow and excel in his career. His work ethic and commitment to delivering quality results make him a strong asset to any organization. I highly recommend him for any Business Analyst or similar role.',
+    ],
+  },
+  {
+    name: 'F M Nafis Rahman',
+    position: 'Deputy Manager IT',
+    company: 'CDIP',
+    image: '/nafis.png',
+    text: [
+      'I’ve had the privilege of working with Mohaimen Rashid, and I can confidently say he is one of the most detail-oriented and strategic professionals I’ve collaborated with. His ability to analyze complex business requirements and translate them into actionable solutions is truly impressive.',
+      'Mohaimen is not just a skilled Business Analyst; he’s also a strong project manager who keeps everything running smoothly. He has a natural talent for bridging the gap between technical teams and business stakeholders, ensuring projects are aligned with organizational goals. His structured approach, combined with his problem-solving mindset, makes him a key asset to any team.',
+      'What sets Mohaimen apart is his proactive attitude and ability to adapt to shifting priorities. Whether it is managing stakeholders, refining processes, or driving project success, he approaches every challenge with confidence and efficiency.',
+      'I highly recommend Mohaimen Rashid to any organization looking for someone with the right mix of analytical skills, leadership, and a results-driven mindset. He’s a great team player, and any company would be fortunate to have him on board.',
+    ],
+  },
 ];
 
 export const Testimonials = ({ hideTitle }: TestimonialsProps) => {
