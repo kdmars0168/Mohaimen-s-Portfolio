@@ -14,7 +14,8 @@ interface ResumeViewerProps {
 
 const MIN_SCALE = 0.5;
 const MAX_SCALE = 2;
-const DEFAULT_MAX_SCALE = 0.85;
+const DEFAULT_SCALE = 1.3;
+const PHONE_BREAKPOINT = 768;
 
 const clamp = (value: number) =>
   Math.max(MIN_SCALE, Math.min(MAX_SCALE, Math.round(value * 100) / 100));
@@ -28,7 +29,7 @@ export const ResumeViewer = ({ file, fileName }: ResumeViewerProps) => {
   const [pdf, setPdf] = useState<PdfBundle | null>(null);
   const [failed, setFailed] = useState(false);
   const [numPages, setNumPages] = useState(0);
-  const [scale, setScale] = useState(DEFAULT_MAX_SCALE);
+  const [scale, setScale] = useState(DEFAULT_SCALE);
   const [current, setCurrent] = useState(1);
 
   useEffect(() => {
@@ -59,23 +60,26 @@ export const ResumeViewer = ({ file, fileName }: ResumeViewerProps) => {
     };
   }, []);
 
-  /** Default zoom: min(0.85, fit-width). */
+  /** Fit-width is the manual escape hatch and the phone default. */
   const fitWidthScale = useCallback(() => {
     const element = containerRef.current;
-    if (!element) return DEFAULT_MAX_SCALE;
-    return clamp(Math.min(DEFAULT_MAX_SCALE, (element.clientWidth - 24) / pageWidth.current));
+    if (!element) return DEFAULT_SCALE;
+    return clamp(Math.min(DEFAULT_SCALE, (element.clientWidth - 24) / pageWidth.current));
   }, []);
 
+  /** Default zoom: 130% on desktop, fit-width on phones. */
   const applyDefaultZoom = useCallback(() => {
     if (userAdjusted.current) return;
-    setScale(fitWidthScale());
+    setScale(window.innerWidth >= PHONE_BREAKPOINT ? DEFAULT_SCALE : fitWidthScale());
   }, [fitWidthScale]);
 
-  // Re-fit while the visitor has not chosen a zoom themselves.
+  // Phones keep re-fitting to the viewport until the visitor chooses a zoom themselves.
   useEffect(() => {
     const element = containerRef.current;
     if (!element || typeof ResizeObserver === "undefined") return;
-    const observer = new ResizeObserver(() => applyDefaultZoom());
+    const observer = new ResizeObserver(() => {
+      if (window.innerWidth < PHONE_BREAKPOINT) applyDefaultZoom();
+    });
     observer.observe(element);
     return () => observer.disconnect();
   }, [applyDefaultZoom]);
@@ -187,7 +191,7 @@ export const ResumeViewer = ({ file, fileName }: ResumeViewerProps) => {
       </div>
 
       <div
-        className="max-h-[70vh] overflow-auto bg-accent/20 p-3"
+        className="max-h-[85vh] overflow-auto bg-accent/20 p-3"
         tabIndex={0}
         role="region"
         aria-label="Résumé pages — scroll to read, select text to copy"
