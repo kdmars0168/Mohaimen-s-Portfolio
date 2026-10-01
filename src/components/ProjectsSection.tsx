@@ -12,6 +12,7 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import { earlierBuilds, featuredProjects, moreProjects } from "@/data/portfolio";
+import { earlierBuildsProjects } from "@/data/portfolio";
 
 interface ProjectsSectionProps {
   hideTitle?: boolean;
@@ -26,13 +27,12 @@ export const ProjectsSection = (_props: ProjectsSectionProps) => {
       <Carousel
         plugins={[
           Autoplay({
-            delay: 4200,
+            delay: 3000,
             stopOnInteraction: false,
-            stopOnMouseEnter: true,
             stopOnFocusIn: true,
           }),
         ]}
-        opts={{ align: "start", loop: true, duration: 30 }}
+        opts={{ align: "start", loop: true }}
         className="w-full"
       >
         <div className="flex items-center justify-end gap-2 mb-6">
@@ -60,7 +60,16 @@ export const ProjectsSection = (_props: ProjectsSectionProps) => {
             <ProjectCard key={project.id} project={project} />
           ))}
         </div>
-        <p className="text-sm text-muted-foreground mt-6 border-t pt-4">{earlierBuilds}</p>
+
+        <div className="mt-10 border-t pt-8">
+          <h3 className="text-xl font-semibold">Earlier builds — 2023</h3>
+          <p className="mt-2 max-w-3xl text-sm text-muted-foreground">{earlierBuilds}</p>
+          <div className="mt-6 grid gap-6 md:grid-cols-2">
+            {earlierBuildsProjects.map((project) => (
+              <ProjectCard key={project.id} project={project} />
+            ))}
+          </div>
+        </div>
       </ExpandedDialog>
     </section>
   );

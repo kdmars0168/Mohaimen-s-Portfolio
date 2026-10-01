@@ -181,6 +181,7 @@ export const featuredProjects: Project[] = [
         href: "https://github.com/RoshiniVadla75/Group-22---CITS5206",
       },
     ],
+    images: ["/projects/ai-museum-1.png", "/projects/ai-museum-2.png", "/projects/ai-museum-3.png"],
   },
   {
     id: "budget-tracker",
@@ -201,7 +202,11 @@ export const featuredProjects: Project[] = [
       { label: "couple-money-staging.vercel.app", href: "https://couple-money-staging.vercel.app/" },
       { label: "github.com/kdmars0168/combined-budget-tracker", href: "https://github.com/kdmars0168/combined-budget-tracker" },
     ],
-    images: ["/couple-money-preview.png"],
+    images: [
+      "/couple-money-preview.png",
+      "/projects/budget-tracker-1.png",
+      "/projects/budget-tracker-2.png",
+    ],
   },
   {
     id: "healthwhisper",
@@ -219,6 +224,11 @@ export const featuredProjects: Project[] = [
     ],
     stack: ["Python", "Flask", "SQLAlchemy", "Alembic", "Flask-Login", "Jinja", "Tailwind", "pytest", "Selenium"],
     links: [{ label: "github.com/kdmars0168/data-analytics-app", href: "https://github.com/kdmars0168/data-analytics-app" }],
+    images: [
+      "/projects/healthwhisper-1.png",
+      "/projects/healthwhisper-2.png",
+      "/projects/healthwhisper-3.png",
+    ],
   },
   {
     id: "amberg",
@@ -371,7 +381,124 @@ export const moreProjects: Project[] = [
 ];
 
 export const earlierBuilds =
-  "Earlier personal builds: four Internet Computer dApps written in Motoko (Nov 2023) — a keeper, a bank, a token and an NFT marketplace prototype — plus bootcamp coursework in Node, PostgreSQL and authentication.";
+  "Four Internet Computer dApps written in Motoko (Nov 2023) — a keeper, a bank, a token and an NFT marketplace prototype — plus bootcamp coursework in Node, PostgreSQL and authentication.";
+
+export const earlierBuildsProjects: Project[] = [
+  {
+    id: "dkeeper",
+    title: "DKeeper — notes on the Internet Computer",
+    meta: "Bootcamp build · Motoko + React",
+    period: "Nov 2023",
+    category: "Personal",
+    description:
+      "A Google Keep-style note-taker whose notes live in a Motoko canister rather than a conventional database. Notes are written from the React front end, held in stable storage and returned by query calls.",
+    highlights: [
+      "Notes persist in canister state through stable variables, so they survive canister upgrades.",
+      "createNote, readNotes and removeNote are exposed from the Motoko actor and called through the generated Candid interface.",
+      "Reads use query calls and writes use update calls — the latency difference is visible in the running app.",
+    ],
+    stack: ["Motoko", "Internet Computer", "React", "Webpack"],
+    links: [
+      { label: "github.com/kdmars0168/DKeeper-App-Blockchain", href: "https://github.com/kdmars0168/DKeeper-App-Blockchain" },
+    ],
+    images: ["/projects/dkeeper-1.png", "/projects/dkeeper-2.png"],
+  },
+  {
+    id: "dbank",
+    title: "DBank — a decentralised bank canister",
+    meta: "Bootcamp build · Motoko on-chain state",
+    period: "Nov 2023",
+    category: "Personal",
+    description:
+      "A bank whose balance lives inside the canister: deposit, withdraw and let the balance compound from the canister's own clock between transactions.",
+    highlights: [
+      "Interest compounds from the time elapsed since the last update, using the canister's own clock rather than a cron job.",
+      "Balance and timestamp are stable variables, so both survive canister upgrades.",
+      "Withdrawals are guarded against invalid amounts, and the same methods are callable from the dfx CLI.",
+    ],
+    stack: ["Motoko", "Internet Computer", "JavaScript", "dfx"],
+    links: [
+      { label: "github.com/kdmars0168/DBank-Blockchain-App", href: "https://github.com/kdmars0168/DBank-Blockchain-App" },
+    ],
+    images: ["/projects/dbank-1.png", "/projects/dbank-2.png"],
+  },
+  {
+    id: "dang-token",
+    title: "DANG — a token and faucet on the Internet Computer",
+    meta: "Bootcamp build · token ledger in Motoko",
+    period: "Nov 2023",
+    category: "Personal",
+    description:
+      "A custom cryptocurrency token with an interactive front end for checking balances and transferring between accounts, plus a faucet that pays out 10,000 DANG to a signed-in principal.",
+    highlights: [
+      "Token balances are keyed by principal and transfers are validated against the sender's balance.",
+      "The faucet pays out through an authenticated identity rather than a shared wallet.",
+      "The front end calls the canister directly with typed arguments through the Candid interface.",
+    ],
+    stack: ["Motoko", "Internet Computer", "React", "@dfinity/agent"],
+    links: [
+      { label: "github.com/kdmars0168/DANG-Crypto-Token", href: "https://github.com/kdmars0168/DANG-Crypto-Token" },
+    ],
+    images: ["/projects/dang-1.png", "/projects/dang-2.png"],
+  },
+  {
+    id: "opend",
+    title: "OpenD — NFT marketplace, one canister per NFT",
+    meta: "Bootcamp build · canister-per-asset design",
+    period: "Nov 2023",
+    category: "Personal",
+    description:
+      "A marketplace where users mint NFTs, list them for sale, browse the listings and buy from other owners. Each minted NFT is deployed as its own canister, so ownership records live on-chain.",
+    highlights: [
+      "Canister-per-asset design: minting creates a new NFT canister that holds its own name, owner and image bytes.",
+      "The marketplace tracks NFTs, owners and listings in HashMaps keyed by principal, and pays for the new canisters in cycles.",
+      "React front end with a discovery gallery, a personal collection view and a minting form calling generated Candid interfaces.",
+    ],
+    stack: ["Motoko", "Internet Computer", "React", "Bootstrap"],
+    links: [
+      { label: "github.com/kdmars0168/OpenD-NFT-Marketplace", href: "https://github.com/kdmars0168/OpenD-NFT-Marketplace" },
+    ],
+    images: ["/projects/opend-1.png", "/projects/opend-2.png"],
+  },
+  {
+    id: "postgres-todo",
+    title: "To-Do List — PostgreSQL from the server down",
+    meta: "Bootcamp coursework · Node + PostgreSQL",
+    period: "2023",
+    category: "Personal",
+    description:
+      "A server-rendered to-do list backed by a real PostgreSQL database: add, edit, tick off and delete items with SQL rather than client-side state.",
+    highlights: [
+      "Express routes issue parameterised INSERT, UPDATE and DELETE statements against the items table.",
+      "EJS renders the list on the server, so the page works without a client framework.",
+      "Schema and seed data are kept as SQL in queries.sql alongside the app.",
+    ],
+    stack: ["Node.js", "Express", "PostgreSQL", "EJS"],
+    links: [
+      { label: "github.com/kdmars0168/ToDoList-w-PostgreSQL", href: "https://github.com/kdmars0168/ToDoList-w-PostgreSQL" },
+    ],
+    images: ["/projects/postgres-todo-1.png", "/projects/postgres-todo-2.png"],
+  },
+  {
+    id: "auth-secrets",
+    title: "Authentication & Security — six levels in one Express app",
+    meta: "Bootcamp coursework · Node, MongoDB, Passport",
+    period: "2023",
+    category: "Personal",
+    description:
+      "The bootcamp's authentication ladder in a single app: plain-text storage, encryption, MD5, bcrypt salting, Passport sessions and finally Google OAuth 2.0 — behind one 'secrets' board.",
+    highlights: [
+      "Passport local strategy with salted, hashed password storage and session-based login.",
+      "Protected routes: submitting a secret requires an authenticated session and lands back on the shared board.",
+      "OAuth 2.0 flow wired for Google sign-in alongside the local strategy.",
+    ],
+    stack: ["Node.js", "Express", "MongoDB", "Passport", "OAuth 2.0"],
+    links: [
+      { label: "github.com/kdmars0168/Authentication-Security", href: "https://github.com/kdmars0168/Authentication-Security" },
+    ],
+    images: ["/projects/auth-secrets-1.png", "/projects/auth-secrets-2.png"],
+  },
+];
 
 export const skills: SkillGroup[] = [
   {

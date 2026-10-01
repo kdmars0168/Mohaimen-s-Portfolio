@@ -48,6 +48,16 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
       >
         <div className="relative h-40 overflow-hidden shrink-0">
           {images.length > 1 ? (
+            <div
+              onClick={(event) => {
+                if ((event.target as HTMLElement).closest("button")) event.stopPropagation();
+              }}
+              onKeyDown={(event) => {
+                if ((event.target as HTMLElement).closest("button")) event.stopPropagation();
+              }}
+              role="presentation"
+              className="h-full w-full"
+            >
             <Carousel className="w-full h-full" opts={{ loop: true }}>
               <CarouselContent className="h-full ml-0">
                 {images.map((image) => (
@@ -64,6 +74,7 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
               <CarouselPrevious className="left-2 invisible group-hover:visible focus-visible:visible bg-background/80 backdrop-blur" />
               <CarouselNext className="right-2 invisible group-hover:visible focus-visible:visible bg-background/80 backdrop-blur" />
             </Carousel>
+            </div>
           ) : hasImages ? (
             <img
               src={images[0]}
