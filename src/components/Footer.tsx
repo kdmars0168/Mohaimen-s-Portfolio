@@ -1,22 +1,20 @@
-import { Github, Linkedin, Mail } from 'lucide-react';
+import { FileText, Github, Linkedin, Mail } from 'lucide-react';
+import { profile, resume } from '@/data/portfolio';
 
 export const Footer = () => {
   const socialLinks = [
     {
       icon: Github,
-      href: 'https://github.com/kdmars0168', // Your actual GitHub link
+      href: profile.links.find((link) => link.label === 'GitHub')?.href ?? '#',
       label: 'GitHub',
     },
     {
       icon: Linkedin,
-      href: 'https://www.linkedin.com/in/mohaimenrashid/', // Your actual LinkedIn link
+      href: profile.links.find((link) => link.label === 'LinkedIn')?.href ?? '#',
       label: 'LinkedIn',
     },
-    {
-      icon: Mail,
-      href: 'mailto:marashid0168@gmail.com', // Your actual email
-      label: 'Email',
-    },
+    { icon: Mail, href: `mailto:${profile.email}`, label: 'Email' },
+    { icon: FileText, href: resume.file, label: 'Résumé (PDF)' },
   ];
 
   return (

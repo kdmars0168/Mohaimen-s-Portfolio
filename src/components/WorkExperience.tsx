@@ -1,51 +1,21 @@
 import { motion } from "framer-motion";
-import { Briefcase } from "lucide-react";
-
-const experiences = [
-  {
-    title: "Business Analyst",
-    company: "Center for Development Innovation and Practices (CDIP)",
-    companyLogo: "/cdip.png",
-    period: "June 2023 – July 2024",
-    achievements: [
-      "Spearheaded analysis for 6 enterprise projects, including CRM and HRM platforms for NGOs and supply chain systems.",
-      "Collaborated with 320+ stakeholders to gather requirements and authored 420+ user stories and test cases.",
-      "Produced comprehensive technical documents, including BRDs, SRS, and UAT reports, ensuring alignment with client goals.",
-      "Optimized processes with tailored solutions, achieving a 20% reduction in processing time and a 15% improvement in resource allocation.",
-    ],
-  },
-  {
-    title: "Business Analyst",
-    company: "SELISE Digital Platforms",
-    companyLogo: "/selise.png",
-    period: "July 2021 – May 2023",
-    achievements: [
-      "Led ERP and CRM integrations for multinational clients, including a CHF10B security services company and a CHF12B rail leader, improving efficiency by 30%.",
-      "Coordinated a 12-member Scrum team, managing Sprint planning and retrospectives while designing 160+ clickable prototypes to mitigate disruptions.",
-      "Authored 1,200+ user stories and test cases, translating business requirements into actionable technical solutions for timely project delivery.",
-    ],
-  },
-  {
-    title: "Business Development Intern",
-    company: "The Tech Academy",
-    period: "March 2020 – May 2021",
-    companyLogo: "/tta.png",
-    achievements: [
-      "Conducted in-depth market research, identifying a $1M profit opportunity and driving a 15% revenue increase through optimized operations.",
-      "Designed a customer loyalty program projected to increase memberships by 20%, enhancing client engagement and satisfaction.",
-    ],
-  },
-];
+import { Briefcase, Building2 } from "lucide-react";
+import { experience } from "@/data/portfolio";
+import { DUR, EASE, VIEWPORT, staggerParent } from "@/lib/motion";
 
 interface WorkExperienceProps {
   hideTitle?: boolean;
 }
 
+const entryVariants = {
+  hidden: { opacity: 0, y: 28 },
+  show: { opacity: 1, y: 0, transition: { duration: DUR.base, ease: EASE } },
+};
+
 export const WorkExperience = ({ hideTitle }: WorkExperienceProps) => {
   return (
     <section className="py-12 px-4">
       <div className="max-w-4xl mx-auto">
-        {/* Section Title */}
         {!hideTitle && (
           <div className="flex items-center justify-center gap-2 mb-8">
             <Briefcase className="w-6 h-6 text-primary" />
@@ -53,54 +23,60 @@ export const WorkExperience = ({ hideTitle }: WorkExperienceProps) => {
           </div>
         )}
 
-        {/* Work Experience List */}
-        <div className="space-y-6">
-          {experiences.map((exp, index) => (
-            <motion.div
-              key={exp.title}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-              className="relative group"
+        <motion.div
+          initial="hidden"
+          whileInView="show"
+          viewport={VIEWPORT}
+          variants={staggerParent()}
+          className="space-y-6"
+        >
+          {experience.map((entry) => (
+            <motion.article
+              key={`${entry.org}-${entry.period}`}
+              variants={entryVariants}
+              whileHover={{ y: -4 }}
+              transition={{ duration: DUR.fast, ease: EASE }}
+              className="relative group rounded-xl border bg-card/60 backdrop-blur-md p-6 shadow-soft hover:shadow-lift transition-shadow"
             >
-              <div className="relative p-6 rounded-xl border backdrop-blur-md group-hover:bg-accent/5 transition-colors shadow-md">
-                <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-                  
-                  {/* Company Logo & Details */}
-                  <div className="flex items-start gap-4">
-                    {exp.companyLogo && (
-                      <img
-                        src={exp.companyLogo}
-                        alt={`${exp.company} logo`}
-                        className="w-14 h-14 rounded-lg object-contain flex-shrink-0"
-                      />
-                    )}
-                    <div>
-                      <h3 className="text-xl font-semibold mb-1 text-primary">
-                        {exp.title}
-                      </h3>
-                      <p className="text-muted-foreground">
-                        {exp.company} • {exp.period}
-                      </p>
-                    </div>
+              <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-4">
+                <div className="flex items-start gap-4">
+                  {entry.logo ? (
+                    <img
+                      src={entry.logo}
+                      alt=""
+                      className="w-14 h-14 rounded-lg object-contain bg-background/70 border p-1 shrink-0"
+                      loading="lazy"
+                    />
+                  ) : (
+                    <span className="w-14 h-14 rounded-lg border bg-accent/40 flex items-center justify-center shrink-0">
+                      <Building2 className="w-6 h-6 text-primary" aria-hidden />
+                    </span>
+                  )}
+                  <div>
+                    <h3 className="text-xl font-semibold text-primary">{entry.role}</h3>
+                    <p className="text-muted-foreground">{entry.org}</p>
+                    <p className="text-xs text-muted-foreground mt-1">{entry.context}</p>
                   </div>
-
-                  {/* Divider on Larger Screens */}
-                  <div className="hidden md:block w-px h-12 bg-border" />
-
-                  {/* Achievements List */}
-                  <ul className="list-disc list-outside pl-6 space-y-2 text-sm text-muted-foreground">
-                    {exp.achievements.map((achievement, i) => (
-                      <li key={i}>{achievement}</li>
-                    ))}
-                  </ul>
-
+                </div>
+                <div className="md:text-right shrink-0">
+                  <p className="text-sm font-medium tabular-nums">{entry.period}</p>
+                  <p className="text-xs text-muted-foreground">{entry.place}</p>
                 </div>
               </div>
-            </motion.div>
+
+              <ul className="grid gap-2 md:grid-cols-2 text-sm text-muted-foreground">
+                {entry.bullets.map((bullet) => (
+                  <li key={bullet} className="flex gap-2">
+                    <span aria-hidden className="text-primary/70 leading-6">
+                      •
+                    </span>
+                    <span>{bullet}</span>
+                  </li>
+                ))}
+              </ul>
+            </motion.article>
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   );

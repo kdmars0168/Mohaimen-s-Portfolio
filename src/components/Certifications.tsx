@@ -1,47 +1,36 @@
-import { motion } from 'framer-motion';
-import { Award, Plus } from 'lucide-react';
-import { useState, useRef } from 'react';
-import { Button } from './ui/button';
-import { ExpandedDialog } from './ui/dialog-content';
-
-const certifications = [
-  { title: 'Complete Web Development Bootcamp', issuer: 'Udemy', date: '2023' },
-  { title: 'SQL Bootcamp', issuer: 'Udemy', date: '2023' },
-  {
-    title: 'The Practical BPMN 2.0 Master Class',
-    issuer: 'Udemy',
-    date: '2022',
-  },
-  {
-    title: 'The Complete SQL Bootcamp: Go From Zero to Hero',
-    issuer: 'Udemy',
-    date: '2023',
-  },
-  {
-    title: 'Scrum Master Certification 2023 + Agile Scrum Certification',
-    issuer: 'Udemy',
-    date: '2021',
-  },
-  {
-    title: 'Agile Leadership and Resilient Teams',
-    issuer: 'Udemy',
-    date: '2021',
-  },
-  {
-    title: 'Detailed Guide to Building Wireframes Using Balsamiq Mockups',
-    issuer: 'Udemy',
-    date: '2021',
-  },
-  { title: 'UX Strategy Fundamentals', issuer: 'Udemy', date: '2021' },
-];
+import { motion } from "framer-motion";
+import { Award, Plus } from "lucide-react";
+import { useState } from "react";
+import { Button } from "./ui/button";
+import { ExpandedDialog } from "./ui/dialog-content";
+import { certifications, type Certification } from "@/data/portfolio";
+import { DUR, EASE, VIEWPORT, staggerParent } from "@/lib/motion";
 
 interface CertificationsProps {
   hideTitle?: boolean;
 }
 
+const cardVariants = {
+  hidden: { opacity: 0, y: 20 },
+  show: { opacity: 1, y: 0, transition: { duration: DUR.base, ease: EASE } },
+};
+
+const CertificationCard = ({ cert }: { cert: Certification }) => (
+  <motion.div
+    variants={cardVariants}
+    whileHover={{ y: -4 }}
+    transition={{ duration: DUR.fast, ease: EASE }}
+    className="flex flex-col items-center text-center p-6 rounded-xl border bg-card/50 hover:bg-accent/40 hover:shadow-soft transition-[background-color,box-shadow]"
+  >
+    <Award className="w-8 h-8 text-primary mb-4" aria-hidden />
+    <h3 className="text-base font-semibold mb-2 leading-snug">{cert.title}</h3>
+    <p className="text-sm text-muted-foreground">{cert.issuer}</p>
+    <p className="text-xs text-muted-foreground mt-2 tabular-nums">{cert.date}</p>
+  </motion.div>
+);
+
 export const Certifications = ({ hideTitle }: CertificationsProps) => {
   const [showAll, setShowAll] = useState(false);
-  const containerRef = useRef<HTMLDivElement>(null);
 
   return (
     <section className="py-12 px-4">
@@ -53,58 +42,34 @@ export const Certifications = ({ hideTitle }: CertificationsProps) => {
           </div>
         )}
 
-        <div className="flex justify-end mb-8">
-          <Button
-            variant="outline"
-            onClick={() => setShowAll(true)}
-            className="gap-2"
-          >
+        <div className="flex justify-end mb-6">
+          <Button variant="outline" onClick={() => setShowAll(true)} className="gap-2">
             <Plus className="w-4 h-4" /> Show All
           </Button>
         </div>
 
-        <div
-          ref={containerRef}
-          className="relative overflow-hidden max-h-[400px]"
+        <motion.div
+          initial="hidden"
+          whileInView="show"
+          viewport={VIEWPORT}
+          variants={staggerParent()}
+          className="marquee-viewport relative overflow-hidden max-h-[420px] [mask-image:linear-gradient(to_bottom,transparent,black_8%,black_92%,transparent)]"
         >
-          <motion.div
-            animate={{ y: ['0%', '-100%'] }}
-            transition={{ repeat: Infinity, duration: 20, ease: 'linear' }}
-            className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8"
+          <div
+            className="marquee-track grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6"
+            style={{ ["--marquee-duration"]: "44s" } as React.CSSProperties}
           >
             {[...certifications, ...certifications].map((cert, index) => (
-              <div
-                key={index}
-                className="flex flex-col items-center text-center p-6 rounded-lg hover:bg-accent/5 transition-colors"
-              >
-                <Award className="w-8 h-8 text-primary mb-4" />
-                <h3 className="text-lg font-semibold mb-2">{cert.title}</h3>
-                <p className="text-sm text-muted-foreground">{cert.issuer}</p>
-                <p className="text-sm text-muted-foreground mt-2">
-                  {cert.date}
-                </p>
-              </div>
+              <CertificationCard key={`${cert.title}-${index}`} cert={cert} />
             ))}
-          </motion.div>
-        </div>
+          </div>
+        </motion.div>
       </div>
 
-      <ExpandedDialog
-        isOpen={showAll}
-        onClose={() => setShowAll(false)}
-        title="All Certifications"
-      >
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 max-h-[500px] overflow-y-auto">
+      <ExpandedDialog isOpen={showAll} onClose={() => setShowAll(false)} title="All Certifications">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
           {certifications.map((cert) => (
-            <div
-              key={cert.title}
-              className="flex flex-col items-center text-center p-6 rounded-lg hover:bg-accent/5 transition-colors"
-            >
-              <Award className="w-8 h-8 text-primary mb-4" />
-              <h3 className="text-lg font-semibold mb-2">{cert.title}</h3>
-              <p className="text-sm text-muted-foreground">{cert.issuer}</p>
-              <p className="text-sm text-muted-foreground mt-2">{cert.date}</p>
-            </div>
+            <CertificationCard key={cert.title} cert={cert} />
           ))}
         </div>
       </ExpandedDialog>

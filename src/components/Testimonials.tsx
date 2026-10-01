@@ -1,220 +1,176 @@
-import { useState } from 'react';
-import { motion } from 'framer-motion';
-import { Quote, Plus } from 'lucide-react';
-import { ExpandedDialog } from './ui/dialog-content';
-import { Button } from './ui/button';
-import Autoplay from 'embla-carousel-autoplay';
+import { motion } from "framer-motion";
+import { Quote, Plus } from "lucide-react";
+import { useCallback, useEffect, useState } from "react";
+import Autoplay from "embla-carousel-autoplay";
+import { ExpandedDialog } from "./ui/dialog-content";
+import { Button } from "./ui/button";
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
-} from '@/components/ui/carousel';
-
-interface Testimonial {
-  name: string;
-  position: string;
-  company: string;
-  image: string;
-  text: string[];
-  companyLogo?: string;
-}
+  CarouselNext,
+  CarouselPrevious,
+  type CarouselApi,
+} from "@/components/ui/carousel";
+import { testimonials, type Testimonial } from "@/data/portfolio";
+import { DUR, EASE } from "@/lib/motion";
 
 interface TestimonialsProps {
   hideTitle?: boolean;
 }
 
-const testimonials: Testimonial[] = [
-  {
-    name: 'Deep Roy Moulick',
-    position: 'AGM (IT) || Chief Technology Officer',
-    company: 'CDIP',
-    image: '/deep.png',
-    companyLogo: '/cdip.png',
-    text: [
-      "An exceptional project manager who consistently delivers results. Their leadership transformed our team's productivity and helped us achieve our goals ahead of schedule. The attention to detail and strategic thinking brought to our projects was invaluable.",
-      'During his time on my team, he played a pivotal role in gathering and analyzing business requirements, bridging the gap between stakeholders and technical teams. His ability to translate complex data into actionable insights significantly contributed to the success of our projects. He consistently demonstrated strong communication skills, keen attention to detail, and a proactive approach to solving business challenges.',
-      'What sets Mohaimen apart is his dedication to continuous improvement and his willingness to take on new challenges. He is a team player who collaborates effectively with cross-functional teams and always ensures that project objectives are met efficiently.',
-      'I highly recommend Mohaimen Rashid to any organization looking for a talented and driven Business Analyst. His skills, work ethic, and analytical expertise make him a valuable asset to any team',
-    ],
-  },
-  {
-    name: 'Sarfaraz Khan',
-    position: 'Product Manager @ AMH | Executive MBA, CSPO',
-    company: 'AMH',
-    image: '/sarfaraz.png',
-    text: [
-      'Mohaimen is a very diligent and hard working professional. He was very meticulous to his approach for every task and would ask a lot of questions for getting full clarity of the situation. Definitely would make a fine addition to every team he joins in his career.',
-    ],
-  },
-  {
-    name: 'Alimur Razi Rana',
-    position: 'Full-Stack | JavaScript | Angular | React | .NET | Azure',
-    company: 'Cefalo',
-    image: '/alimur.png',
-    text: [
-      'I had the pleasure of working with Mohaimen Rashid when he was a Business Analyst and I was a developer on the team. His dedication and effectiveness in bridging the gap between the development team and the client were truly impressive.',
-      'Mohaimen ensured we understood the business requirements clearly by gathering detailed insights from the client and translating them into actionable tasks for our team. He also handled our queries with diligence, seeking out clarifications from the client and resolving any concerns promptly.',
-      'Additionally, Mohaimen seamlessly collaborated with internal teams, such as DevOps and QA, while maintaining an agile workflow. This led to higher productivity and enhanced the client’s trust in our work.',
-      'I highly recommend Mohaimen Rashid for any kind of Business Analyst or Product Owner role. His ability to lead, communicate, and adapt makes him an invaluable asset to any team.',
-    ],
-  },
-  {
-    name: 'Shamsul Islam Rana',
-    position: 'Software Engineer',
-    company: 'Adventure Dhaka',
-    image: '/rana.png',
-    text: [
-      'I had the pleasure of working with Mohaimen at CDIP, where he was an exceptional Business Analyst. He has a great ability to turn complex business needs into clear, actionable insights. His attention to detail, problem-solving skills, and ability to collaborate with both stakeholders and technical teams made a real difference in our projects.',
-      'Beyond his technical expertise, Mohaimen is a fantastic teammate—always approachable, eager to learn, and committed to delivering results. Any organization would be lucky to have him!',
-    ],
-  },
-  {
-    name: 'Sheikh Rezwanul Islam',
-    position: 'Support Engineer | Active QA Professional',
-    company: 'CDIP',
-    image: '/sk.png',
-    text: [
-      'I highly recommend Mohaimen as a Business Analyst. His ability to simplify complex problems, deliver actionable insights, and collaborate effectively makes him an invaluable asset to any team. A true professional.',
-    ],
-  },
-  {
-    name: 'Fardin Ananta',
-    position:
-      'Robotics Engineer | Business Development | Media-tech | Data Analyst',
-    company: 'Tyger Media',
-    image: '/fardin.png',
-    text: [
-      'Mohaimen is a very smart and capable young man. He is very detail oriented and a perfectionist in his work and was a valuable asset on my team.',
-    ],
-  },
-  {
-    name: 'Md Ali Zawad',
-    position: 'PMP® | MBA | Project Manager',
-    company: 'Axentec by Robi Axiata',
-    image: '/ali.png',
-    text: [
-      'I had the pleasure of working with Mohaimen Rashid during his tenure as a Business Analyst at Selise Digital Platforms, where he played a crucial role in supporting an ERP project, valued at more than half-a-million Euros for a Swiss security company. Despite it being his first professional role, Mohaimen quickly adapted to the fast-paced environment and demonstrated strong analytical skills, attention to detail, and a proactive approach to problem-solving.',
-      'The Security ERP project was a large-scale initiative aimed at streamlining workforce management, security personnel scheduling, and operational workflows. Mohaimen actively contributed by gathering and refining requirements, documenting business processes, and collaborating with developers and QA teams to ensure the successful development of key features. His ability to understand complex system requirements and communicate effectively with stakeholders played a significant role in keeping the project on track.',
-      'He showed great initiative in understanding the security industry’s unique challenges and worked diligently to align the ERP solution with business needs. His structured approach to problem-solving, adaptability, and willingness to take ownership of tasks made him a reliable and valuable team member.',
-      'I am confident that Mohaimen will continue to grow and excel in his career. His work ethic and commitment to delivering quality results make him a strong asset to any organization. I highly recommend him for any Business Analyst or similar role.',
-    ],
-  },
-  {
-    name: 'F M Nafis Rahman',
-    position: 'Deputy Manager IT',
-    company: 'CDIP',
-    image: '/nafis.png',
-    text: [
-      'I’ve had the privilege of working with Mohaimen Rashid, and I can confidently say he is one of the most detail-oriented and strategic professionals I’ve collaborated with. His ability to analyze complex business requirements and translate them into actionable solutions is truly impressive.',
-      'Mohaimen is not just a skilled Business Analyst; he’s also a strong project manager who keeps everything running smoothly. He has a natural talent for bridging the gap between technical teams and business stakeholders, ensuring projects are aligned with organizational goals. His structured approach, combined with his problem-solving mindset, makes him a key asset to any team.',
-      'What sets Mohaimen apart is his proactive attitude and ability to adapt to shifting priorities. Whether it is managing stakeholders, refining processes, or driving project success, he approaches every challenge with confidence and efficiency.',
-      'I highly recommend Mohaimen Rashid to any organization looking for someone with the right mix of analytical skills, leadership, and a results-driven mindset. He’s a great team player, and any company would be fortunate to have him on board.',
-    ],
-  },
-];
+const CarouselProgress = ({ api, count }: { api: CarouselApi; count: number }) => {
+  const [progress, setProgress] = useState(0);
+
+  useEffect(() => {
+    if (!api) return;
+    const update = () => setProgress(api.scrollProgress());
+    update();
+    api.on("scroll", update);
+    api.on("select", update);
+    api.on("reInit", update);
+    return () => {
+      api.off("scroll", update);
+      api.off("select", update);
+      api.off("reInit", update);
+    };
+  }, [api]);
+
+  const current = api ? api.selectedScrollSnap() + 1 : 1;
+
+  return (
+    <div className="flex items-center gap-3">
+      <span className="text-xs text-muted-foreground tabular-nums" aria-live="polite">
+        {current} / {count}
+      </span>
+      <div
+        className="h-1 w-28 rounded-full bg-border overflow-hidden"
+        role="progressbar"
+        aria-label="Carousel progress"
+        aria-valuemin={0}
+        aria-valuemax={100}
+        aria-valuenow={Math.round(progress * 100)}
+      >
+        <motion.div
+          className="h-full bg-primary origin-left"
+          animate={{ scaleX: Math.max(progress, 0.02) }}
+          transition={{ duration: DUR.fast, ease: EASE }}
+          style={{ width: "100%" }}
+        />
+      </div>
+    </div>
+  );
+};
 
 export const Testimonials = ({ hideTitle }: TestimonialsProps) => {
   const [showAll, setShowAll] = useState(false);
-  const [selectedTestimonial, setSelectedTestimonial] =
-    useState<Testimonial | null>(null);
-  const plugin = Autoplay({
-    delay: 5000,
-    stopOnInteraction: false,
-    rootNode: (emblaRoot) => emblaRoot.parentElement,
-  });
+  const [selected, setSelected] = useState<Testimonial | null>(null);
+  const [api, setApi] = useState<CarouselApi>();
+
+  const handleApi = useCallback((instance: CarouselApi) => setApi(instance), []);
 
   return (
-    <section id="testimonials" className="py-4 px-4 bg-accent/5">
+    <section id="testimonials" className="py-4 px-4">
       <div className="max-w-6xl mx-auto">
-        <div className="flex items-center justify-between mb-6">
-          <div className="ml-auto">
-            <Button
-              variant="outline"
-              onClick={() => setShowAll(true)}
-              className="gap-2"
-            >
-              <Plus className="w-4 h-4" /> Show All
-            </Button>
-          </div>
+        <div className="flex items-center justify-end mb-6">
+          <Button variant="outline" onClick={() => setShowAll(true)} className="gap-2">
+            <Plus className="w-4 h-4" /> Show All
+          </Button>
         </div>
-        <div className="h-[420px]">
+
+        <div className="pb-2">
           <Carousel
-            plugins={[plugin]}
+            setApi={handleApi}
+            plugins={[
+              Autoplay({
+                delay: 5000,
+                stopOnInteraction: false,
+                stopOnMouseEnter: true,
+                stopOnFocusIn: true,
+                rootNode: (emblaRoot) => emblaRoot.parentElement,
+              }),
+            ]}
             opts={{
-              align: 'start',
+              align: "start",
               loop: true,
-              dragFree: true,
+              duration: 32,
               skipSnaps: false,
-              duration: 400,
             }}
             className="w-full"
           >
-            <CarouselContent className="-ml-2 md:-ml-4">
-              {testimonials.map((testimonial, index) => (
+            <CarouselContent className="-ml-3 md:-ml-4">
+              {testimonials.map((testimonial) => (
                 <CarouselItem
-                  key={index}
-                  className="pl-2 md:pl-4 basis-full md:basis-1/2 lg:basis-2/5"
+                  key={testimonial.name}
+                  className="pl-3 md:pl-4 basis-full md:basis-1/2 lg:basis-2/5"
                 >
-                  <motion.div
-                    initial={{ opacity: 1, y: 0 }}
-                    className="bg-card border border-gray-300 p-6 rounded-xl h-full cursor-pointer hover:shadow-lg transition-shadow"
-                    onClick={() => setSelectedTestimonial(testimonial)}
+                  <motion.figure
+                    whileHover={{ y: -4 }}
+                    transition={{ duration: DUR.fast, ease: EASE }}
+                    className="h-full rounded-xl border bg-card p-6 cursor-pointer hover:shadow-lift transition-shadow flex flex-col"
+                    onClick={() => setSelected(testimonial)}
                   >
-                    <Quote className="w-8 h-8 text-primary mb-4" />
-                    <p className="text-muted-foreground mb-6 line-clamp-3">
-                      {testimonial.text}
-                    </p>
-                    <div className="flex items-center gap-4 mt-auto">
-                      <div className="w-12 h-12 rounded-full overflow-hidden">
+                    <Quote className="w-8 h-8 text-primary mb-4 shrink-0" aria-hidden />
+                    <blockquote className="text-muted-foreground mb-6 line-clamp-3 leading-relaxed">
+                      {testimonial.quote.join(" ")}
+                    </blockquote>
+                    <figcaption className="flex items-center gap-4 mt-auto">
+                      <span className="w-12 h-12 rounded-full overflow-hidden shrink-0 border">
                         <img
                           src={testimonial.image}
-                          alt={testimonial.name}
+                          alt=""
                           className="w-full h-full object-cover"
+                          loading="lazy"
                         />
-                      </div>
-                      <div>
-                        <h4 className="font-semibold">{testimonial.name}</h4>
-                        <p className="text-sm text-muted-foreground">
-                          {testimonial.position} at {testimonial.company}
-                        </p>
-                      </div>
-                    </div>
-                  </motion.div>
+                      </span>
+                      <span className="min-w-0">
+                        <span className="block font-semibold truncate">{testimonial.name}</span>
+                        <span className="block text-sm text-muted-foreground truncate">
+                          {testimonial.role} · {testimonial.company}
+                        </span>
+                      </span>
+                    </figcaption>
+                  </motion.figure>
                 </CarouselItem>
               ))}
             </CarouselContent>
+
+            <div className="flex items-center justify-between mt-6">
+              <CarouselProgress api={api} count={testimonials.length} />
+              <div className="flex items-center gap-2">
+                <CarouselPrevious className="static translate-y-0 h-9 w-9" />
+                <CarouselNext className="static translate-y-0 h-9 w-9" />
+              </div>
+            </div>
           </Carousel>
         </div>
       </div>
 
-      <ExpandedDialog
-        isOpen={showAll}
-        onClose={() => setShowAll(false)}
-        title="All Testimonials"
-      >
+      <ExpandedDialog isOpen={showAll} onClose={() => setShowAll(false)} title="All Testimonials">
         <div className="grid gap-6 md:grid-cols-2">
           {testimonials.map((testimonial) => (
             <div
               key={testimonial.name}
               className="p-6 rounded-xl border cursor-pointer hover:shadow-lg transition-shadow"
-              onClick={() => setSelectedTestimonial(testimonial)}
+              onClick={() => setSelected(testimonial)}
             >
-              <Quote className="w-8 h-8 text-primary mb-4" />
+              <Quote className="w-8 h-8 text-primary mb-4" aria-hidden />
               <p className="text-muted-foreground mb-6 line-clamp-3">
-                {testimonial.text}
+                {testimonial.quote.join(" ")}
               </p>
               <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-full overflow-hidden">
+                <div className="w-12 h-12 rounded-full overflow-hidden shrink-0">
                   <img
                     src={testimonial.image}
-                    alt={testimonial.name}
+                    alt=""
                     className="w-full h-full object-cover"
+                    loading="lazy"
                   />
                 </div>
                 <div>
                   <h4 className="font-semibold">{testimonial.name}</h4>
                   <p className="text-sm text-muted-foreground">
-                    {testimonial.position} at {testimonial.company}
+                    {testimonial.role} · {testimonial.company}
                   </p>
                 </div>
               </div>
@@ -224,40 +180,31 @@ export const Testimonials = ({ hideTitle }: TestimonialsProps) => {
       </ExpandedDialog>
 
       <ExpandedDialog
-        isOpen={!!selectedTestimonial}
-        onClose={() => setSelectedTestimonial(null)}
-        title="Testimonial"
+        isOpen={!!selected}
+        onClose={() => setSelected(null)}
+        title={selected ? `${selected.name} — ${selected.company}` : "Testimonial"}
       >
-        {selectedTestimonial && (
-          <div className="space-y-6">
-            <Quote className="w-8 h-8 text-primary" />
-
-            {/* Correctly display text as paragraphs */}
-            {Array.isArray(selectedTestimonial.text) ? (
-              selectedTestimonial.text.map((paragraph, index) => (
-                <p key={index} className="text-muted-foreground">
-                  {paragraph}
-                </p>
-              ))
-            ) : (
-              <p className="text-muted-foreground">
-                {selectedTestimonial.text}
+        {selected && (
+          <div className="space-y-5">
+            <Quote className="w-8 h-8 text-primary" aria-hidden />
+            {selected.quote.map((paragraph) => (
+              <p key={paragraph} className="text-muted-foreground leading-relaxed">
+                {paragraph}
               </p>
-            )}
-
+            ))}
             <div className="flex items-center gap-4 pt-4 border-t">
-              <div className="w-12 h-12 rounded-full overflow-hidden">
+              <div className="w-12 h-12 rounded-full overflow-hidden shrink-0">
                 <img
-                  src={selectedTestimonial.image}
-                  alt={selectedTestimonial.name}
+                  src={selected.image}
+                  alt=""
                   className="w-full h-full object-cover"
+                  loading="lazy"
                 />
               </div>
               <div>
-                <h4 className="font-semibold">{selectedTestimonial.name}</h4>
+                <h4 className="font-semibold">{selected.name}</h4>
                 <p className="text-sm text-muted-foreground">
-                  {selectedTestimonial.position} at{' '}
-                  {selectedTestimonial.company}
+                  {selected.role} · {selected.company}
                 </p>
               </div>
             </div>

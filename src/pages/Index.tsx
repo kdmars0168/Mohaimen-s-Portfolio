@@ -1,23 +1,60 @@
-import { Header } from '@/components/Header';
-import { Footer } from '@/components/Footer';
-import { ProfileSection } from '@/components/ProfileSection';
-import { ProjectsSection } from '@/components/ProjectsSection'; // ✅ Imported refactored Projects Section
-import { WorkExperience } from '@/components/WorkExperience';
-import { Certifications } from '@/components/Certifications';
-import { SkillsSection } from '@/components/SkillsSection';
-import { Education } from '@/components/Education';
-import { Services } from '@/components/Services';
-import { ContactForm } from '@/components/ContactForm';
-import { Testimonials } from '@/components/Testimonials';
+import { motion } from "framer-motion";
 import {
-  Brain,
-  Wrench,
-  Briefcase,
-  GraduationCap,
   Award,
-  Quote,
+  Brain,
+  Briefcase,
+  Code,
+  FileText,
+  GraduationCap,
   MailIcon,
-} from 'lucide-react';
+  Quote,
+  Wrench,
+} from "lucide-react";
+import type { ReactNode } from "react";
+import { Header } from "@/components/Header";
+import { Footer } from "@/components/Footer";
+import { ProfileSection } from "@/components/ProfileSection";
+import { ProjectsSection } from "@/components/ProjectsSection";
+import { WorkExperience } from "@/components/WorkExperience";
+import { Certifications } from "@/components/Certifications";
+import { SkillsSection } from "@/components/SkillsSection";
+import { Education } from "@/components/Education";
+import { Services } from "@/components/Services";
+import { ContactForm } from "@/components/ContactForm";
+import { Testimonials } from "@/components/Testimonials";
+import { ResumeSection } from "@/components/ResumeSection";
+import { Reveal } from "@/components/motion/Reveal";
+import { DUR, EASE } from "@/lib/motion";
+
+const SectionHeading = ({ icon: Icon, children }: { icon: typeof Brain; children: ReactNode }) => (
+  <Reveal>
+    <div className="flex items-center gap-2 mb-8 justify-start md:justify-center">
+      <Icon className="w-6 h-6 text-primary" aria-hidden />
+      <h2 className="text-2xl md:text-3xl font-bold">{children}</h2>
+    </div>
+  </Reveal>
+);
+
+const Section = ({
+  id,
+  className,
+  children,
+}: {
+  id: string;
+  className?: string;
+  children: ReactNode;
+}) => (
+  <motion.section
+    id={id}
+    initial={{ opacity: 0, y: 32 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    viewport={{ once: true, amount: 0.08 }}
+    transition={{ duration: DUR.slow, ease: EASE }}
+    className={`scroll-mt-24 ${className ?? ""}`}
+  >
+    {children}
+  </motion.section>
+);
 
 const Index = () => {
   return (
@@ -25,71 +62,60 @@ const Index = () => {
       <Header />
 
       <main className="flex-1">
-        <ProfileSection />
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: DUR.slow, ease: EASE }}
+        >
+          <ProfileSection />
+        </motion.div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="space-y-16 py-16">
-            <ProjectsSection />
+            <Section id="projects">
+              <SectionHeading icon={Code}>Featured Projects</SectionHeading>
+              <ProjectsSection hideTitle />
+            </Section>
 
-            <section id="skills" className="rounded-xl">
-              <div className="flex items-center gap-2 mb-8 justify-start md:justify-center">
-                <Brain className="w-6 h-6" />
-                <h2 className="text-2xl md:text-3xl font-bold">Expertise</h2>
-              </div>
+            <Section id="skills">
+              <SectionHeading icon={Brain}>Expertise</SectionHeading>
               <SkillsSection hideTitle />
-            </section>
+            </Section>
 
-            <section id="services" className="rounded-xl">
-              <div className="flex items-center gap-2 mb-8 justify-start md:justify-center">
-                <Wrench className="w-6 h-6" />
-                <h2 className="text-2xl md:text-3xl font-bold">Services</h2>
-              </div>
+            <Section id="services">
+              <SectionHeading icon={Wrench}>Services</SectionHeading>
               <Services />
-            </section>
+            </Section>
 
-            <section id="work-experience">
-              <div className="flex items-center gap-2 mb-8 justify-start md:justify-center">
-                <Briefcase className="w-6 h-6" />
-                <h2 className="text-2xl md:text-3xl font-bold">
-                  Work Experience
-                </h2>
-              </div>
+            <Section id="work-experience">
+              <SectionHeading icon={Briefcase}>Work Experience</SectionHeading>
               <WorkExperience hideTitle />
-            </section>
+            </Section>
 
-            <section id="education">
-              <div className="flex items-center gap-2 mb-8 justify-start md:justify-center">
-                <GraduationCap className="w-6 h-6" />
-                <h2 className="text-2xl md:text-3xl font-bold">Education</h2>
-              </div>
+            <Section id="education">
+              <SectionHeading icon={GraduationCap}>Education</SectionHeading>
               <Education hideTitle />
-            </section>
+            </Section>
 
-            <section id="certifications">
-              <div className="flex items-center gap-2 mb-8 justify-start md:justify-center">
-                <Award className="w-6 h-6" />
-                <h2 className="text-2xl md:text-3xl font-bold">
-                  Certifications
-                </h2>
-              </div>
+            <Section id="certifications">
+              <SectionHeading icon={Award}>Certifications</SectionHeading>
               <Certifications hideTitle />
-            </section>
+            </Section>
 
-            <section id="testimonials">
-              <div className="flex items-center gap-2 mb-8 justify-start md:justify-center">
-                <Quote className="w-6 h-6" />
-                <h2 className="text-2xl md:text-3xl font-bold">Testimonials</h2>
-              </div>
+            <Section id="testimonials">
+              <SectionHeading icon={Quote}>Testimonials</SectionHeading>
               <Testimonials hideTitle />
-            </section>
+            </Section>
 
-            <section id="contact">
-              <div className="flex items-center gap-2 mb-8 justify-start md:justify-center">
-                <MailIcon className="w-6 h-6" />
-                <h2 className="text-2xl md:text-3xl font-bold">Contact</h2>
-              </div>
+            <Section id="resume">
+              <SectionHeading icon={FileText}>Résumé</SectionHeading>
+              <ResumeSection hideTitle />
+            </Section>
+
+            <Section id="contact">
+              <SectionHeading icon={MailIcon}>Contact</SectionHeading>
               <ContactForm hideTitle />
-            </section>
+            </Section>
           </div>
         </div>
       </main>

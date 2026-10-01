@@ -1,13 +1,13 @@
-
 import { motion } from "framer-motion";
-import { 
-  BarChart2, 
-  Users, 
+import {
+  BarChart2,
+  Users,
   Sparkles,
   Target,
   Scale,
-  LineChart
+  LineChart,
 } from "lucide-react";
+import { DUR, EASE, VIEWPORT, staggerParent } from "@/lib/motion";
 
 interface ServicesProps {
   hideTitle?: boolean;
@@ -49,27 +49,32 @@ const services = [
 export const Services = ({ hideTitle }: ServicesProps) => {
   return (
     <div className="max-w-7xl mx-auto">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {services.map((service, index) => (
+      <motion.div
+        initial="hidden"
+        whileInView="show"
+        viewport={VIEWPORT}
+        variants={staggerParent()}
+        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+      >
+        {services.map((service) => (
           <motion.div
             key={service.title}
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            whileHover={{ 
-              scale: 1.02,
-              boxShadow: "0 10px 30px -10px rgba(0,0,0,0.2)",
+            variants={{
+              hidden: { opacity: 0, y: 24 },
+              show: { opacity: 1, y: 0, transition: { duration: DUR.base, ease: EASE } },
             }}
-            transition={{ duration: 0.3 }}
-            className="relative overflow-hidden rounded-xl bg-card p-6 hover:bg-accent/5"
+            whileHover={{ y: -6 }}
+            transition={{ duration: DUR.fast, ease: EASE }}
+            className="group relative overflow-hidden rounded-xl border bg-card p-6 hover:bg-accent/40 hover:shadow-lift transition-[background-color,box-shadow]"
           >
-            <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
-              <service.icon className="w-6 h-6 text-primary" />
+            <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4 transition-transform duration-300 group-hover:scale-105">
+              <service.icon className="w-6 h-6 text-primary" aria-hidden />
             </div>
             <h3 className="text-xl font-semibold mb-2">{service.title}</h3>
             <p className="text-muted-foreground">{service.description}</p>
           </motion.div>
         ))}
-      </div>
+      </motion.div>
     </div>
   );
 };

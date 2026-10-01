@@ -1,20 +1,56 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Mohaimen's Portfolio</title>
-    <meta name="description" content="Lovable Generated Project" />
-    <meta name="author" content="Lovable" />
+    <title>Mohaimen Rashid (Shanin) — Portfolio | Software, Data & Business Analysis</title>
     <meta
-      property="og:image"
-      content="https://mohaimen-portfolio.vercel.app/mohaimen-preview.png"
+      name="description"
+      content="Master of Information Technology (Applied Computing), UWA · Python, SQL, React and Power BI · business analysis across ERP, CRM and HRM delivery · Perth, WA. Projects, experience, testimonials and résumé."
     />
+    <meta name="author" content="Mohaimen Rashid" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)" />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Mohaimen Rashid (Shanin)" />
+    <meta property="og:title" content="Mohaimen Rashid (Shanin) — Portfolio" />
+    <meta
+      property="og:description"
+      content="Business analysis and software delivery — ERP, CRM and HRM platforms for Swiss and European clients, an Australian government placement, and full-stack builds in Python, SQL and React."
+    />
+    <meta property="og:url" content="https://mohaimen-portfolio.vercel.app/" />
+    <meta property="og:image" content="https://mohaimen-portfolio.vercel.app/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Mohaimen Rashid (Shanin) — Portfolio" />
+    <meta
+      name="twitter:description"
+      content="Business analysis and software delivery — ERP, CRM and HRM platforms, an Australian government placement, and full-stack builds in Python, SQL and React."
+    />
+    <meta name="twitter:image" content="https://mohaimen-portfolio.vercel.app/og-image.png" />
+
+    <script>
+      // Pre-paint theme: apply the stored choice, else the OS preference, before first paint.
+      (function () {
+        try {
+          var stored = localStorage.getItem("portfolio-theme");
+          var dark = stored
+            ? stored === "dark"
+            : window.matchMedia("(prefers-color-scheme: dark)").matches;
+          document.documentElement.classList.toggle("dark", dark);
+          document.documentElement.style.colorScheme = dark ? "dark" : "light";
+        } catch (error) {
+          /* storage blocked — fall through to the light default */
+        }
+      })();
+    </script>
   </head>
 
   <body>
     <div id="root"></div>
-    <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

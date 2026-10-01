@@ -1,137 +1,110 @@
-import { motion } from 'framer-motion';
-import {
-  Briefcase,
-  Users,
-  Target,
-  LineChart,
-  ShieldCheck,
-  Brain,
-  Plus,
-  Code,
-  Database,
-  FileText,
-  BarChart,
-  Book,
-  Settings,
-  Layers,
-  Activity,
-  MonitorSmartphone,
-  Globe,
-  PencilRuler,
-  Wrench,
-  ClipboardList,
-  Server,
-} from 'lucide-react'; // ✅ Import diverse icons
-import { useState } from 'react';
-import { Button } from './ui/button';
-import { ExpandedDialog } from './ui/dialog-content';
-import Autoplay from 'embla-carousel-autoplay';
+import { motion } from "framer-motion";
+import { Layers, Plus, Sparkles, Target, Wrench } from "lucide-react";
+import { useState } from "react";
+import Autoplay from "embla-carousel-autoplay";
+import { Button } from "./ui/button";
+import { ExpandedDialog } from "./ui/dialog-content";
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
-} from '@/components/ui/carousel';
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
+import { skills, type SkillGroup } from "@/data/portfolio";
+import { DUR, EASE, springSoft } from "@/lib/motion";
 
 interface SkillsSectionProps {
   hideTitle?: boolean;
 }
 
-const skills = [
-  // Project Management & Agile
-  { name: 'Project Management', icon: Briefcase },
-  { name: 'Agile Scrum Methodology', icon: ClipboardList },
-  { name: 'Stakeholder Management', icon: Users },
-  { name: 'Requirements Gathering', icon: FileText },
-  { name: 'System Design', icon: Layers },
+const groupIcons = [Target, Wrench, Layers, Sparkles];
 
-  // Tools & Technologies
-  { name: 'Power BI', icon: BarChart },
-  { name: 'JIRA', icon: ClipboardList },
-  { name: 'Azure DevOps', icon: Server },
-  { name: 'SQL', icon: Database },
-
-  // UI/UX & Documentation
-  { name: 'Figma', icon: PencilRuler },
-  { name: 'Confluence', icon: Book },
-
-  // Web Development Knowledge
-  { name: 'HTML', icon: Code },
-  { name: 'CSS', icon: Globe },
-  { name: 'JavaScript', icon: MonitorSmartphone },
-  { name: 'React', icon: Activity },
-];
+const SkillGroupCard = ({
+  group,
+  index,
+  full = false,
+}: {
+  group: SkillGroup;
+  index: number;
+  full?: boolean;
+}) => {
+  const Icon = groupIcons[index % groupIcons.length];
+  const maxItems = 6;
+  const items = full ? group.items : group.items.slice(0, maxItems);
+  const hidden = group.items.length - items.length;
+  return (
+    <motion.div
+      whileHover={{ y: -4 }}
+      transition={springSoft}
+      className="h-full rounded-xl border bg-card p-6 flex flex-col hover:shadow-lift transition-shadow"
+    >
+      <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
+        <Icon className="w-6 h-6 text-primary" aria-hidden />
+      </div>
+      <h3 className="text-lg font-semibold mb-1">{group.title}</h3>
+      <p className="text-xs text-muted-foreground mb-4">{group.note}</p>
+      <ul className="flex flex-wrap gap-2 mt-auto">
+        {items.map((item) => (
+          <li
+            key={item}
+            className="px-2.5 py-1 text-xs rounded-full bg-secondary text-secondary-foreground"
+          >
+            {item}
+          </li>
+        ))}
+        {hidden > 0 && (
+          <li className="px-2.5 py-1 text-xs rounded-full border border-dashed text-muted-foreground">
+            +{hidden} more
+          </li>
+        )}
+      </ul>
+    </motion.div>
+  );
+};
 
 export const SkillsSection = ({ hideTitle }: SkillsSectionProps) => {
   const [showAll, setShowAll] = useState(false);
-  const plugin = Autoplay({ delay: 1300, stopOnInteraction: false });
 
   return (
-    <section id="skills" className="py-12 px-4 bg-accent/5">
-      <div className="max-w-4xl mx-auto">
-        {/* Title & Expand Button */}
-        <div className="flex items-center justify-between mb-12">
-          <div className="ml-auto">
-            <Button
-              variant="outline"
-              onClick={() => setShowAll(true)}
-              className="gap-2"
-            >
-              <Plus className="w-4 h-4" /> Show All
-            </Button>
-          </div>
-        </div>
-
-        {/* Skill Carousel */}
+    <section id="skills" className="py-12 px-4">
+      <div className="max-w-6xl mx-auto">
         <Carousel
-          plugins={[plugin]}
-          opts={{
-            align: 'start',
-            loop: true,
-            dragFree: true, // ✅ Ensures smooth autoplay without jumping
-          }}
+          plugins={[
+            Autoplay({
+              delay: 4600,
+              stopOnInteraction: false,
+              stopOnMouseEnter: true,
+              stopOnFocusIn: true,
+            }),
+          ]}
+          opts={{ align: "start", loop: true, duration: 30 }}
           className="w-full"
         >
-          <CarouselContent className="-ml-2 md:-ml-4">
-            {skills.map((skill, index) => (
+          <div className="flex items-center justify-end gap-2 mb-6">
+            <Button variant="outline" onClick={() => setShowAll(true)} className="gap-2 mr-1">
+              <Plus className="w-4 h-4" /> Show All
+            </Button>
+            <CarouselPrevious className="static translate-y-0 h-9 w-9" />
+            <CarouselNext className="static translate-y-0 h-9 w-9" />
+          </div>
+          <CarouselContent className="-ml-3 md:-ml-4">
+            {skills.map((group, index) => (
               <CarouselItem
-                key={skill.name}
-                className="pl-2 md:pl-4 basis-1/2 md:basis-1/5"
+                key={group.title}
+                className="pl-3 md:pl-4 basis-full md:basis-1/2 lg:basis-1/3"
               >
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }} // ✅ Prevents re-animation when scrolling
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
-                  className="flex flex-col items-center text-center p-6"
-                >
-                  <div className="w-16 h-16 rounded-full bg-accent/10 flex items-center justify-center mb-4 shadow-md">
-                    <skill.icon className="w-8 h-8 text-primary" />
-                  </div>
-                  <h3 className="font-medium">{skill.name}</h3>
-                </motion.div>
+                <SkillGroupCard group={group} index={index} />
               </CarouselItem>
             ))}
           </CarouselContent>
         </Carousel>
       </div>
 
-      {/* Expanded Dialog for All Skills */}
-      <ExpandedDialog
-        isOpen={showAll}
-        onClose={() => setShowAll(false)}
-        title="All Expertise"
-      >
-        <div className="flex flex-wrap justify-center gap-6">
-          {skills.map((skill) => (
-            <div
-              key={skill.name}
-              className="flex flex-col items-center text-center p-4 w-32"
-            >
-              <div className="w-16 h-16 rounded-full bg-accent/10 flex items-center justify-center mb-4 shadow-lg">
-                <skill.icon className="w-8 h-8 text-primary" />
-              </div>
-              <h3 className="font-medium">{skill.name}</h3>
-            </div>
+      <ExpandedDialog isOpen={showAll} onClose={() => setShowAll(false)} title="All Expertise">
+        <div className="grid gap-6 md:grid-cols-2">
+          {skills.map((group, index) => (
+            <SkillGroupCard key={group.title} group={group} index={index} full />
           ))}
         </div>
       </ExpandedDialog>
