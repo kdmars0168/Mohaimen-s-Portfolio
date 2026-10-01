@@ -80,5 +80,6 @@ one-paragraph summary between PROFESSIONAL SUMMARY and EDUCATION).
   back ends were replaced by local demo actors that keep the same interfaces (notes in
   localStorage, a ledger for DANG, a seeded NFT collection for OpenD). The UI is the projects'
   real UI; the data is demo data. Disclosed in HANDOVER.md.
-- To-Do List (PostgreSQL) ran against a throwaway PostgreSQL cluster in `%TEMP%`; the
-  Authentication & Security app ran against the local MongoDB with a demo account.
+- To-Do List (PostgreSQL) ran against the machine's local PostgreSQL 17 service on port 5433
+  (a `permalist` database with the project's own `queries.sql` schema/seed); the Authentication &
+  Security app ran against the local MongoDB with a demo account.

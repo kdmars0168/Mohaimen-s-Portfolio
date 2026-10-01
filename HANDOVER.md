@@ -36,7 +36,7 @@
 
 ## 3. Snapshot provenance (read before reusing the images)
 
-- **Ran for real:** AI Museum WA and HealthWhisper (local Flask + SQLite, seeded demo rows), Combined Budget Tracker (public staging site), To-Do List (throwaway PostgreSQL cluster in `%TEMP%`), Authentication & Security (local MongoDB, demo account + demo secret).
+- **Ran for real:** AI Museum WA and HealthWhisper (local Flask + SQLite, seeded demo rows), Combined Budget Tracker (public staging site), To-Do List (the machine's local PostgreSQL 17 on port 5433 — a `permalist` database created from the project's own `queries.sql`, plus two demo items), Authentication & Security (local MongoDB, demo account + demo secret).
 - **Front ends served locally with demo back ends:** DKeeper, DBank, DANG token, OpenD NFT. The DFINITY SDK needs WSL and this machine only has the `docker-desktop` distro, so canister calls were answered by local demo actors with the projects' own interfaces (notes in localStorage, a token ledger, a seeded NFT collection). The UI in every screenshot is the project's real UI; the data is demo data.
 - All snapshots are synthetic — no real emails, tokens, health data or third-party secrets appear in any frame.
 
