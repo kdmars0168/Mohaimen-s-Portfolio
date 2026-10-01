@@ -1,167 +1,107 @@
-# HANDOVER — Portfolio: Refine Original Design + Rebuild Classic Résumé Engine
+# HANDOVER — Portfolio Refine + Classic Résumé Engine (session 2, end of session)
 
 **Date written:** 2026-10-01 (AWST)
-**Status (updated 2026-10-01, execution session):** EXECUTING the revised plan in §6. Branch `codex/portfolio-refine` created from `origin/main` @ `2a5fa16` (origin/main had advanced by one README-only commit since the handover was written; `daa8776` is its parent and the live design is unchanged). Nothing pushed. Nothing deployed. Live site untouched.
+**Status:** Stages 0, A and B are COMPLETE, verified and committed. **The review gate has NOT been passed** — Mohaimen still has to give feedback on the refined site and the classic résumé PDF. Nothing is pushed. Nothing is deployed. The live site is still the old build.
 **Repos:** `kdmars0168/Mohaimen-s-Portfolio` (portfolio) + `G:\job-hunt` (résumé engine/dossier)
-**Live:** https://mohaimen-portfolio.vercel.app/
+**Live:** https://mohaimen-portfolio.vercel.app/ (untouched, still `origin/main` @ `2a5fa16`)
+
+---
 
 ## 0. Next session — start here
 
-1. This file is already saved at the portfolio worktree root (written 2026-10-01). Create `codex/portfolio-refine` from `origin/main` — the untracked `HANDOVER.md` survives the checkout — and commit it as the first commit on that branch.
-2. Append the pointer to `G:\job-hunt\HANDOVER.md` §10 (exact wording in §7).
-3. Execute the approved plan (§6): Stage A → Stage B → **user review gate** → Stage C → deploy.
+1. **Read this file in full**, then `G:\job-hunt\AGENTS.md` before any engine work (`tools/*.py` stays wrap-never-edit; job-hunt git = add/commit only, never push).
+2. **Collect Mohaimen's feedback** on (a) the refined site and (b) the classic résumé PDF/DOCX, and implement it on the existing branch `codex/portfolio-refine` in the worktree `C:\Users\Asus\.codex\worktrees\d1c6\portfolio project`. Re-run the full gate set after every change (build / lint / tsc / Playwright sweep / content audit, and `verify_classic.py` if the résumé changes).
+3. **Only after he approves the site + the PDF:** run **Stage C**, then **deploy** (§4).
+4. **One question is still owed to him** (he deferred it to after the PDF review): should the job-hunt app's own tailored-CV pipeline (`app/api → tools/render.py`) also render through the new classic engine, or stay as-is? Record the answer in the job-hunt handover either way.
 
-## 1. Current state (verified 2026-10-01)
+## 1. Current state (verified at end of this session)
 
 | What | Where | State |
 |---|---|---|
-| Live site (OLD design) | https://mohaimen-portfolio.vercel.app/ | `origin/main` @ `daa8776` — **this is the design to keep and refine** |
-| Main checkout | `G:\portfolio project` | on `main` @ daa8776, clean, in sync with origin |
-| Agent worktree | `C:\Users\Asus\.codex\worktrees\d1c6\portfolio project` | on `codex/portfolio-refresh` @ `2769897` — noir redesign; **REJECTED as a design; keep as history, never merge** |
-| Dev server | http://localhost:4173 | running (PID 19340), serves the noir build from the worktree |
-| Résumé engine | `G:\job-hunt\tools\render.py` | `kind` = `cv`/`statement`; builds .docx then exports PDF via Word COM (`to_pdf_and_count`). Reproduces an older/other CV format ≠ the user's 2024 template |
-| Résumé source | `G:\job-hunt\resumes\portfolio-resume.md` | current markdown → wrong format; to be rewritten classic |
-| Python venv | `G:\job-hunt\app\.venv\Scripts\python.exe` | python-docx + win32com ready |
-| Template originals | `C:\Users\Asus\Downloads\Documents\` | `Copy of Mohaimen Rashid- RESUME 2024.docx` + `Mohaimen Rashid- RESUME 2024.pdf` |
-| Template analysis rig | `C:\Users\Asus\AppData\Local\Temp\resume-template\` | analyze.py, dump_tables.py, dump_numbering.py, find_borders.py, measure_pdf.py, dump.json, tpl-1.png, docx/ |
-| QA rig | `%TEMP%\portfolio-qa\` | old-top.png, old-tall.png, pw/ (playwright-core rig), pw-d-*.png section screenshots, og.html/og.png |
-| Lockfiles | portfolio root | `bun.lockb` + `package-lock.json` — keep both in sync |
-
-**Assets to harvest from the noir branch (copy, not merge):**
-- `src/data/portfolio.ts` — all dossier-verified content (single source of truth)
-- `src/components/ResumeSection.tsx` + `ResumeViewer.tsx` — react-pdf 10.2.0 / pdfjs-dist 5.4.296 viewer (default is `scale=1` + fit-width button; change default to `min(0.85, fit-width)`)
-- `public/fonts/` — geist-latin-var.woff2, geist-mono-latin-var.woff2, fraunces-latin-var.woff2
-- `docs/ui-standards.md` + `design-qa.md` + `README.md` — patterns to re-baseline, not reuse as-is
-- `public/Mohaimen-Rashid-Resume.pdf` — placeholder; replaced in Stage B
-
-**Old design (base) facts:** `src/pages/Index.tsx` composes Header (fixed nav + theme toggle), ProfileSection, ProjectsSection/ProjectCard (embla carousels + expanded dialog), SkillsSection (Expertise), Services, WorkExperience, Education, Certifications, Testimonials (embla + autoplay), ContactForm (Formspree `mpwqynrn`), Footer. `use-theme.tsx` follows system + toggle (no persistence). `Hero.tsx` and `AnimatedBackground.tsx` are dead files (not imported) — leave them. `index.html` still has the Lovable `gptengineer.js` loader + placeholder meta; `package.json` homepage still points at GitHub Pages on main.
+| Main checkout | `G:\portfolio project` | on `main` @ `2a5fa16`, clean, in sync with `origin/main` — untouched this session |
+| Worktree + branch | `C:\Users\Asus\.codex\worktrees\d1c6\portfolio project` | on **`codex/portfolio-refine`**, clean, **3 commits ahead of `origin/main`** (a0d2846, e89606d, 948f306) |
+| Noir branch | worktree `codex/portfolio-refresh` @ `2769897` | history only — **never merge** |
+| Dev server | http://localhost:5174 | running (vite, session-scoped; restart command in §6) |
+| Classic résumé | `G:\job-hunt\resumes\portfolio-resume.md/.docx/.pdf` | rewritten + rendered — 2 pages, 903 words, `CLASSIC VERIFY OK` |
+| Site résumé file | `public/Mohaimen-Rashid-Resume.pdf` (worktree) | the new classic PDF (125,379 bytes) — committed in `948f306` |
+| job-hunt repo | branch `frontend-redesign` | commit **`6d95ab1`** with the two new tools + the rewritten résumé; everything else in that repo is still uncommitted (pre-existing) |
+| QA artifacts | `%TEMP%\portfolio-qa\refine\` | 37 screenshots + `refine-report.json` (all checks true, 0 console errors) |
+| Résumé QA | `%TEMP%\resume-template\` | probe rigs, `cmp-*.png`, `final-ours-1.png`, `final-ours-2.png` |
 
 ## 2. What was done this session
 
-- **Phase 0 skill intake:** full read of the UI/UX skill set (22 craft/system/motion skills + verification skills + the product-design plugin) → distilled into `docs/ui-standards.md` (noir contract).
-- **Built the full noir/champagne redesign** (branch `codex/portfolio-refresh` @ 2769897): dark-first tokens, editorial layout, dossier-verified `portfolio.ts`, lazy-loaded resume viewer, self-hosted fonts, QA screenshots, a11y pass.
-- **Reversal #1 — design:** user does NOT want the new frontend. Keep the OLD design; refine it in place (fonts, spacing, motion, carousels). "Subtle changes outside, proper deep dive inside."
-- **Reversal #2 — viewer zoom:** 100% is too far in for an average user; fit-width alone not wanted → default `min(0.85, fit-width)`.
-- **Résumé format:** engine output still not the right format / not ATS-best. User supplied their preferred 2024 template (PDF + DOCX) and demanded the engine reproduce it exactly, emitting BOTH `.docx` and `.pdf` every render ("end of discussion"). Template reverse-engineered to measurements (§4).
-- **ATS deep dive:** both pasted recruiter posts analysed against primary sources → verified findings (§5).
-- **Motion correction (2026-10-01, post-handover):** user explicitly wants MORE beautiful animation/motion — motion is a headline refinement goal, not something to tone down. Wording fixed across this file; `prefers-reduced-motion` remains only as an OS-level accessibility fallback that never affects normal visitors.
-- **Locked decisions** captured (§3); approved plan recorded (§6); session wrapped with this handover.
+### Stage 0 — setup
+- `git fetch origin` — `origin/main` had advanced by one **README-only** commit since the previous handover (`daa8776` → `2a5fa16`); the branch was cut from the latest `origin/main` (design unchanged).
+- `codex/portfolio-refine` created in the existing worktree; this file committed as the first commit (`a0d2846`) with §6 refreshed to the revised execution plan. The previous verbatim plan now lives in git history at that commit.
+- `G:\job-hunt\HANDOVER.md` §10 gained item 7 pointing at this file.
+- The stale noir dev server on :4173 (PID 19340) was stopped.
 
-## 3. Locked decisions (do not re-litigate)
+### Stage A — portfolio refined in place (commit `e89606d`)
+- **Harvested from noir (copy, never merge):** `src/data/portfolio.ts`, `ResumeSection.tsx`, `ResumeViewer.tsx`, `public/fonts/geist*.woff2`, `public/couple-money-preview.png`, the placeholder résumé PDF; `docs/ui-standards.md` + `design-qa.md` were rewritten rather than reused.
+- **Every section wired to `src/data/portfolio.ts`** (single source of truth): Profile, Projects + ProjectCard, Skills, Services, Work Experience (+ per-role logo field), Education, Certifications, Testimonials, ContactForm, Footer. All the stale copy (retired email, "Expected 2026", "March 2020", "Product Owner", IoT, 8→7 certs) is gone.
+- **Typography:** self-hosted Geist sans + mono via `@font-face` (`font-display: swap`), Tailwind `font-sans`/`font-mono`, refined type scale, `text-wrap: balance/pretty`, theme-aware `.glass-card`, `shadow-soft`/`shadow-lift` tokens.
+- **Motion system:** `src/lib/motion.ts` (DUR/EASE/STAGGER/springs/VIEWPORT) + `Reveal` and `Section` wrappers + `<MotionConfig reducedMotion="user">`. Page-load choreography, per-section scroll reveals, staggered lists, hover micro-interactions (card lift, image zoom, link underlines), portrait tilt on pointer move, spring-eased embla carousels with arrows + progress + keyboard and pause on hover **and** focus, dialog choreography, scrolled-header transition, smooth anchors (`scroll-mt-24`).
+- **Theme:** pre-paint inline script in `index.html` (stored choice → else OS), persisted on toggle, hook initialises from the applied class and keeps following the OS while no choice is stored.
+- **Résumé section** between Testimonials and Contact + "Résumé" nav link; `ResumeViewer` lazy chunk (react-pdf 10.2.0 + pdfjs-dist 5.4.296); default zoom `min(0.85, fit-width)` re-fitted on resize until the visitor zooms or presses Fit width; toolbar = zoom −/%/+, Fit width, "Page x of y", Open ↗, Download; text layer + annotation layer; `<noscript>` + failure fallback card.
+- **Housekeeping:** real title/description/OG/Twitter meta, Lovable `gptengineer.js` loader removed, OG image regenerated at 1200×630 from the refined design, `package.json` name + homepage → Vercel, README rewritten, `docs/ui-standards.md` + `design-qa.md` rewritten to the refined-original contract, both lockfiles regenerated after adding the two deps.
+- **Fixed pre-existing lint errors** (shadcn `command.tsx`, `textarea.tsx`, `tailwind.config.ts` `require()` import) so `npm run lint` has **0 errors**.
 
-1. Base = the existing live design (`daa8776`). Refine in place; keep every section, component and feature. No redesign, no removals.
-2. Site font: Geist (self-hosted; already in `public/fonts`).
-3. Theme: follows system, toggle retained (matches existing `use-theme`); add pre-paint script (no flash) + persist the toggle choice.
-4. Résumé viewer default zoom: `min(0.85, fit-width)`.
-5. Engine emits `.docx` AND `.pdf` on every render — non-negotiable.
-6. Résumé template: match the 2024 docx exactly (§4). Phone `+61413249236` goes in the public contact line ("Match template exactly").
-7. Content: dossier-verified only (`me.md`, `master-it.yaml`); name `Mohaimen Rashid (Shanin)`; email `shaninrashid00@gmail.com`; no work-rights claims; no hospitality; no invented numbers. All 8 testimonials verbatim; exactly 7 certifications (duplicate SQL removed).
-8. Deploy only after the user reviews the refined site + the new PDF/DOCX.
-9. Motion (post-handover correction, 2026-10-01): rich, plentiful, beautiful animation is a headline goal. `prefers-reduced-motion` is an OS-level accessibility fallback only — it applies exclusively to visitors who enabled "reduce motion" in their OS settings and never reduces motion for standard visitors.
+### Stage B — classic résumé engine (job-hunt commit `6d95ab1`)
+- **`tools/render_classic.py`** (new file; `render.py` untouched — wrap-never-edit): Lora throughout, name 20pt centred, contact 8pt centred, 10pt bold caps headings, **full-bleed `#F3F3F3` summary band**, full-bleed 1pt `#CCCCCC` rule after every other section, bold entry lines, `●` bullets (left 1610 / hanging 360 / right 122 twips), `#1155CC` underlined hyperlinks via `[label|url]`, `%%CLOSING` centred line, **zero tables**, writes `.docx` **and** `.pdf` (Word COM, real page count) on every render. Inline markdown: `%%NAME/%%CONTACT/%%CLOSING`, `## HEADING`, `**entry**`, `- bullet`, plain body, `**bold**` inside lines.
+- **Band implementation detail (do not "simplify"):** Word draws paragraph shading from the paragraph's left indent, so the band is one paragraph **per authored line**, each with indents `-1/-749` plus a leading tab to 1020 twips, and a shaded 8.5pt pad paragraph top and bottom. The engine **fails loudly** (`_check_width`) if a summary line would wrap — keep summary lines short.
+- **Measured against the 2024 template:** text frame 51.0pt (template 51.1), band top 89.0 (89.0), heading baseline 97.2 (97.0), bullet text 80.3 (80.3), rules/band full-bleed 0→612. The template's body content sits in one-cell tables with 170tw cell margins, so every body indent in the engine is `template value + 170` (`CELL_INSET`).
+- **`tools/verify_classic.py`** (new): DOCX — zero tables, single column, Letter geometry, right margin 37.45pt, F3F3F3 shading present, CCCCCC rules, exactly 3 hyperlinks, `●` bullets with 1610/360 indents, Lora-only fonts, 8/10/20pt sizes; PDF — ≤2 pages, 612×792, 3 link annotations with the right targets, full-bleed band + rule spans, first line = name, last = closing, section order, en-dash date ranges, no unrendered markdown. Exits non-zero with a report.
+- **`resumes/portfolio-resume.md`** rewritten from `master-it.yaml` + `me.md`: summary, education (UWA + Deakin with Key Modules from the transcript), work experience (NSP internship, CDIP, SELISE, Tech Academy), projects (AI Museum WA, Combined Budget Tracker, HealthWhisper, Amberg), skills + the 7 certifications, closing. No languages section (the 2024 template has none), no work-rights, no hospitality, no invented numbers.
+- The new PDF was copied over the site's `public/Mohaimen-Rashid-Resume.pdf` and committed in the portfolio repo (`948f306`).
 
-## 4. Target résumé spec — measured from the 2024 template
+## 3. Evidence (all run this session)
 
-Source of truth: `Copy of Mohaimen Rashid- RESUME 2024.docx` + its PDF export (visual truth).
+- `bun run build` clean; `npm run lint` 0 errors (6 pre-existing react-refresh warnings); `npx tsc -p tsconfig.app.json --noEmit` clean. `ResumeViewer-*.js` + the pdf worker ship as **separate lazy chunks**.
+- Playwright sweep (`%TEMP%\portfolio-qa\pw\refine-qa.mjs` → `refine/refine-report.json`): no theme flash, toggle persists across reload, carousel arrows + hover/focus pause + resume + keyboard, dialog open/Escape close, viewer default zoom 85% desktop / 54% phone = `min(0.85, fit-width)`, zoom in + fit width work, "Page 1 of 2", text-layer copy works, open/download links present, reduced-motion still renders, **0 console errors**, no overflow at 320px.
+- Content audit over `src/`, `index.html` and built `dist/`: no `marashid0168`, "Expected 2026", "March 2020", IoT, Lovable/gpteng, "Product Owner", "3.5 years", "Redcliffe" or hospitality in anything rendered (only the guard-rail comment in `portfolio.ts` and the QA docs mention them).
+- `verify_classic.py` → `CLASSIC VERIFY OK` on both outputs; render reports `pages=2 words=903`.
 
-- Page: US Letter 612×792 pt. Text frame: left 51.1 pt, right ≈568 pt; full-bleed bands/rules span x ≈ 0–612 pt.
-- Font: **Lora** throughout.
-- Name 20 pt centred (spacing before 444 twips); contact line 8 pt centred (before 190).
-- Section headings 10 pt **bold UPPERCASE** (after 100 twips; indent left 850 / right −189).
-- Body/entries/bullets 8 pt, single line spacing.
-- **Professional summary:** full-bleed `#F3F3F3` shaded band (tcMar 170 twips, tblW 12211 dxa).
-- **Section rules:** full-bleed 1 pt `#CCCCCC` bottom border under every section EXCEPT the summary.
-- **Entries:** `**Bold Role** | Org | Period | Location`; subsequent entries +115 twips (5.75 pt) before.
-- **Bullets:** `●` (U+25CF); indent left 1440 twips / hanging 360 / right 686.
-- **Hyperlinks:** `#1155CC` single underline — LinkedIn (`linkedin.com/in/mohaimenrashid`; the template's stale `-6809a8206` URL must NOT be used), GitHub, Portfolio.
-- Contact line: `Email: shaninrashid00@gmail.com | Mobile: +61413249236 | LinkedIn | Github | Portfolio | Address: Perth, AU`.
-- Inline bold labels: `Key Modules:`, `Skills:`, `Certifications:` — comma-separated lists.
-- Closing: centred `References Available on Request` (8 pt).
-- **Implementation rule:** the template uses one-cell tables — replace them with paragraph shading + pBdr borders + negative indents (identical look, **zero tables**, ATS-safe).
+## 4. What remains (in order)
 
-## 5. ATS deep dive — verified findings (both pasted posts + primary sources)
+1. **Review gate** — Mohaimen's feedback on the site + the classic PDF/DOCX → implement, re-run gates.
+2. **Owed question** — migrate the job-hunt app's tailored-CV pipeline to the classic engine, or not?
+3. **Stage C** — create `G:\job-hunt\SUBMISSION.md` (it does not exist today) with portal-aware upload guidance: PDF is the default, DOCX for legacy parsers; confirm application packages carry both formats. Submitted packages are never rewritten.
+4. **Deploy** — commit the refine branch, then in `G:\portfolio project`: `git merge --ff-only codex/portfolio-refine`, `git push origin main`; wait for the Vercel build; live smoke = all sections, viewer (zoom/copy/download/new tab), OG preview; then record completion in the job-hunt handover.
+5. Optional if he asks: a one-page variant of the résumé (current text is ~2 pages: page 1 = summary → projects, page 2 = skills/certifications + closing).
 
-| Claim | Verdict | Action taken |
-|---|---|---|
-| "75% of résumés are auto-rejected" | **Myth** — traces to Preptel 2012 (defunct company's sales pitch) | Never cite |
-| Tables/columns/headers/footers/text boxes/graphics/image uploads/unclear sections/incomplete titles break parsing | **Confirmed** — Greenhouse official doc "Unsuccessful resume parse" (Mar 2026; includes 2.5 MB limit) | Engine: zero tables, single column, body contact info, no graphics, full titles |
-| Exact job title / exact terms help | **Partly true** — search is literal; but "10.6×", "99.7%" claims have no source | Tailor with true JD vocabulary; never claim unheld titles |
-| "25–35 keywords is the sweet spot" | **Unverified** | No keyword counts; true terms only, in context |
-| White/hidden text works | **Flagged/penalised** (strong consensus) | Prohibited |
-| ".docx beats .pdf" | **Overstated** — Greenhouse accepts both; legacy portals (e.g. older Taleo) parse docx more reliably | Emit both; portal-aware upload guidance |
-| "83% of résumés are filtered by AI" | Traces to Resume Builder Oct-2024 survey (948 leaders) | Context only, never a claim |
-| Consistent date formats matter | **Plausible** | `Month YYYY – Month YYYY` everywhere |
+## 5. Locked decisions still in force
 
-Practical rules adopted: standard section headers; contact details in body; true terms ideally inside bullet context; no keyword stuffing; no white text; consistent dates; ship both formats.
+- Base = the original live design, refined in place. Every section/feature stays (Formspree `mpwqynrn`, carousels, dialogs, theme toggle, footer).
+- Geist (self-hosted) for the site; `min(0.85, fit-width)` viewer default; dual `.docx`+`.pdf` render; classic 2024 template reproduced exactly; dossier-only content; hospitality and work-rights stay out; the noir branch is never merged.
+- Motion serves normal visitors; `prefers-reduced-motion` is the only fallback and applies only to people who enabled it at OS level.
+- No push and no deploy before the review gate.
 
-## 6. Execution plan (revised 2026-10-01 — supersedes the earlier verbatim copy)
+## 6. Commands cheat-sheet
 
-# Portfolio Refine + Classic Résumé Engine — Execution Plan
+```powershell
+# site — dev / gates (run from the worktree)
+cd "C:\Users\Asus\.codex\worktrees\d1c6\portfolio project"
+npx vite --port 5174 --strictPort          # dev server (the running one is session-scoped)
+bun run build ; npm run lint ; npx tsc -p tsconfig.app.json --noEmit
+cd "$env:TEMP\portfolio-qa\pw"; node refine-qa.mjs     # full Playwright sweep + screenshots
 
-## Summary
-Three gated stages in one workstream: **A** refine the existing live portfolio in place (same sections/design, Geist typography, rich motion system, better carousels, new Résumé section with PDF viewer), **B** rebuild the résumé engine in `G:\job-hunt` to reproduce the 2024 classic template exactly (`.docx` + `.pdf` every render, zero tables), **C** adopt it in the pipeline docs after the user's review gate, then deploy. Nothing is pushed or deployed before the user reviews the refined site and the final PDF. Every step has an explicit pass gate; no step is "done" without fresh verification evidence.
+# résumé — render + verify (job-hunt venv)
+& "G:\job-hunt\app\.venv\Scripts\python.exe" "G:\job-hunt\tools\render_classic.py" cv "G:\job-hunt\resumes\portfolio-resume.md" "G:\job-hunt\resumes\portfolio-resume.docx"
+& "G:\job-hunt\app\.venv\Scripts\python.exe" "G:\job-hunt\tools\verify_classic.py" "G:\job-hunt\resumes\portfolio-resume.docx" "G:\job-hunt\resumes\portfolio-resume.pdf"
+Copy-Item "G:\job-hunt\resumes\portfolio-resume.pdf" "C:\Users\Asus\.codex\worktrees\d1c6\portfolio project\public\Mohaimen-Rashid-Resume.pdf" -Force
+```
 
-## Stage 0 — Setup and protocol
-- `git fetch origin`; create `codex/portfolio-refine` from `origin/main` **in the existing worktree** `C:\Users\Asus\.codex\worktrees\d1c6\portfolio project` (noir branch `codex/portfolio-refresh` @ `2769897` stays as history, never merged). origin/main had advanced by one README-only commit (`2a5fa16`, parent `daa8776`) since the handover was written — the branch is cut from the latest `origin/main`; the live design is unchanged. Commit the untracked `HANDOVER.md` as the first commit; its §6 is refreshed to this plan.
-- Append item 7 to `G:\job-hunt\HANDOVER.md` §10 using the exact wording in handover §7.2.
-- job-hunt: complete the AGENTS.md Tier-1 reads before engine work; `tools/*.py` is wrap-never-edit; git allowed = add/commit only (no push/remote).
-- Kill/replace the stale dev server on :4173 (PID 19340 served the noir build); run the refine build on its own port.
-- Gate: branch exists, worktree clean apart from intended files, handovers updated, dev server serving the new branch.
+## 7. Watch-outs / gotchas
 
-## Stage A — Portfolio refinement (worktree `codex/portfolio-refine`)
-- **Harvest from noir (copy, never merge):** `src/data/portfolio.ts`, `ResumeSection.tsx`, `ResumeViewer.tsx`, `public/fonts/` (Geist sans + Geist mono only; Fraunces unused), `docs/ui-standards.md`; keep `Hero.tsx`/`AnimatedBackground.tsx` dead files untouched.
-- **Content:** wire every old component (Profile, Projects/ProjectCard, Skills, Services, WorkExperience, Education, Certifications, Testimonials, ContactForm) to `src/data/portfolio.ts`; keep Formspree `mpwqynrn`, carousels, dialogs, footer. Audit greps clean (excluding verbatim testimonials): `marashid0168`, `Expected 2026`, `March 2020`, `IoT`, `Lovable`, `gpteng`, `Product Owner`, `3.5 years`, `Redcliffe`, `hospitality`.
-- **Résumé section:** new section between Testimonials and Contact + "Résumé" nav link; viewer lazily imported (react-pdf 10.2.0 + pdfjs-dist 5.4.296), same-origin `public/Mohaimen-Rashid-Resume.pdf`; default zoom = `min(0.85, fit-width)` recomputed on container resize until the user manually zooms; toolbar = zoom −/+, fit width, "Page x of y", open-in-new-tab, download; text layer for copy; keyboard accessible; `<noscript>` + load-failure fallback card. Nav must not overflow at ≥768px (tighten spacing/type, no new hamburger; sub-md behavior unchanged).
-- **Typography/spacing:** self-hosted Geist via `@font-face` (`font-display: swap`) wired into Tailwind/CSS; refined type scale, rhythm, card radii/shadows; both themes AA contrast.
-- **Motion system (headline goal):** shared duration/easing/stagger token module; orchestrated page-load entrance, per-section scroll reveals, staggered lists, card/button/link hover micro-interactions, animated headings/dividers, portrait parallax/tilt, spring-eased embla carousels (arrows, progress, swipe, pause on hover/focus, keyboard), dialog open/close choreography, smooth scrolling + scrolled-header transition; transform/opacity only, 60fps, zero layout shift. `prefers-reduced-motion` is the sole fallback (framer-motion `MotionConfig`/`useReducedMotion`), affecting only visitors who enabled it at OS level.
-- **Theme:** pre-paint inline script in `index.html` applies the stored/system class before first paint; hook initializes from that class; toggle persists the choice.
-- **Housekeeping:** real title/description/OG/Twitter meta; remove the gptengineer.js loader; regenerate `public/og-image.png` (1200×630) from the refined design and point meta at it; `package.json` name/homepage → Vercel URL; rewrite README; rewrite `docs/ui-standards.md` + `design-qa.md` to the refined-original contract.
-- **Deps:** add react-pdf/pdfjs-dist; regenerate and keep `bun.lockb` + `package-lock.json` in sync.
-- Gates: `bun run build`, `npm run lint`, `npx tsc -p tsconfig.app.json --noEmit` all clean; viewer exists as a separate lazy chunk in `dist`; zero console errors; Playwright screenshots of every section at 1440px and 390px in both themes; interactive checks (theme no-flash + persistence, carousel arrows/keyboard/pause, dialog, viewer toolbar incl. text-layer copy); reduced-motion emulation degrades gracefully.
+- **File locks.** `render_classic.py` exports the PDF through Word COM: Word can leave `~$…docx` lock files behind (delete them) and a stray `WINWORD` process. Also, **Adobe Acrobat holding `portfolio-resume.pdf` makes the export fail with a misleading "read-only" error** — that is exactly what happened this session; close the viewer (or kill the process) before re-rendering. Find the holder with the Windows Restart Manager if it happens again.
+- `tools/*.py` is wrap-never-edit — `render.py` was not modified; the classic engine is a new file. job-hunt git: `add`/`commit` only, never `push`/`remote`.
+- Both lockfiles (`bun.lockb` + `package-lock.json`) must stay in sync with `package.json`.
+- Never merge `codex/portfolio-refresh` (noir). `Hero.tsx` / `AnimatedBackground.tsx` stay as dead files (not imported).
+- Keep the summary lines in `portfolio-resume.md` short — the band renderer raises if a line wraps.
+- The QA script injects `scroll-behavior:auto` (smooth scrolling makes hover targets unstable for Playwright) and uses `page.mouse.move` for hover tests; keep both if you edit it.
 
-## Stage B — Classic résumé engine (`G:\job-hunt`)
-- **`tools/render_classic.py`** (new file; imports helpers from `render.py`, edits nothing existing): CLI `cv <input.md> <output.docx>` writes both `.docx` and `.pdf` (Word COM `to_pdf_and_count`) and runs ATS assertions. New helpers only: hyperlink runs (`w:hyperlink`, `#1155CC` underlined), paragraph shading, `w:pBdr` bottom rules, negative indents for full-bleed.
-- **Markdown conventions (decision-complete):** `%%NAME`/`%%CONTACT` furniture; `## HEADING` sections; first heading (`PROFESSIONAL SUMMARY`) + its body paragraphs form the shaded full-bleed `#F3F3F3` band; engine auto-inserts a full-bleed 1pt `#CCCCCC` rule after the last block of every other section; `**...**` full line = entry (`Bold Role | Org | Period | Location`); `- ` = `●` bullet at 1440/360/686 twips; body lines support inline `**bold**` (Key Modules / Skills / Certifications labels); `%%CLOSING` = centred closing line.
-- **Template match (measured from the rig):** US Letter, right margin 749 twips, text positioned by paragraph indents (exact left/right values read from `%TEMP%\resume-template\dump.json` + `analyze.py` at execution; tolerance ±2pt vs the template render); Lora throughout; name 20pt centred (before 444), contact 8pt centred (before 190), headings 10pt bold uppercase (after 100), body/bullets 8pt; zero tables; page ≤ 2.
-- **Contact line (template-exact):** `Email: shaninrashid00@gmail.com | Mobile: +61413249236 | LinkedIn | Github | Portfolio | Address: Perth, AU` with links `linkedin.com/in/mohaimenrashid`, `github.com/kdmars0168`, `mohaimen-portfolio.vercel.app`.
-- **Rewrite `resumes/portfolio-resume.md`** from `master-it.yaml` + `me.md` in the template's section order: SUMMARY, EDUCATION, WORK EXPERIENCE, PROJECTS, SKILLS AND CERTIFICATES, closing `References Available on Request`. No work-rights, no hospitality, no invented numbers; `Month YYYY – Month YYYY` dates.
-- **`tools/verify_classic.py`:** non-zero exit with a report on any failure — DOCX: zero tables, single column, geometry/margins, band fill `F3F3F3`, all rule borders `CCCCCC`, 3 hyperlinks, bullet glyph/indents, Lora-only fonts; PDF: ≤ 2 pages, 3 link annotations, full-bleed band/rule spans, clean text-extraction order, date format consistency.
-- Gate: `verify_classic.py` exits 0 on both outputs; render both PDF pages to PNG and compare side-by-side with `tpl-1.png`; copy the new PDF over the portfolio `public/Mohaimen-Rashid-Resume.pdf` and re-run the Stage A build gate.
+## 8. Files created / changed this session
 
-## Stage C + deploy (only after the review gate)
-- **Review gate:** stop; present the running refined site (dev build) + the new `.docx`/`.pdf`. Nothing is committed to `main` or deployed before approval.
-- After the PDF is approved, ask the user the deferred question: migrate the job-hunt app's tailored-CV pipeline to the classic engine, or leave it (recorded in HANDOVER either way).
-- **Stage C:** create `G:\job-hunt\SUBMISSION.md` (does not exist today) with portal-aware upload guidance — PDF default, DOCX for legacy parsers, per the verified ATS findings; confirm packages carry both formats.
-- **Deploy:** commit the refine branch; in `G:\portfolio project` `git merge --ff-only codex/portfolio-refine`; push `main`; wait for the Vercel build; live smoke = sections render, viewer zoom/copy/download/new-tab, OG preview. job-hunt changes are committed (add/commit only, no push).
-- Post-deploy gate: live URL verified section-by-section; viewer functional at 1440px and 390px; OG preview correct.
+**Portfolio (`codex/portfolio-refine`)** — commits `a0d2846` (handover), `e89606d` (refine), `948f306` (classic PDF): `HANDOVER.md`, `README.md`, `design-qa.md`, `docs/ui-standards.md`, `index.html`, `package.json` + both lockfiles, `tailwind.config.ts`, `src/index.css`, `src/App.tsx`, `src/pages/Index.tsx`, `src/hooks/use-theme.tsx`, `src/lib/motion.ts`, `src/components/motion/Reveal.tsx`, `src/data/portfolio.ts`, `src/components/{Header,ProfileSection,ProjectsSection,ProjectCard,SkillsSection,Services,WorkExperience,Education,Certifications,Testimonials,ContactForm,Footer,ResumeSection,ResumeViewer}.tsx`, `src/components/ui/{command,textarea}.tsx`, `public/{og-image.png,Mohaimen-Rashid-Resume.pdf,couple-money-preview.png}`, `public/fonts/geist-{latin,mono-latin}-var.woff2`.
 
-## Interfaces & Assumptions
-- `src/data/portfolio.ts` is the site's single typed content source (profile, experience, projects, skills, education, certifications, testimonials).
-- `public/Mohaimen-Rashid-Resume.pdf` is the only résumé file the website serves; the DOCX exists for application packages.
-- Locked: base = the `daa8776` design (now `2a5fa16`, README-only delta), Geist font, theme system-default + persisted toggle, zoom `min(0.85, fit-width)`, dual-format render, template-exact résumé, dossier-only content, noir branch never merged, no push/deploy before review.
-- Defaults chosen: Fraunces not used; sub-768px nav unchanged; LANGUAGES section omitted (the 2024 template has none) and can be added on request; `SUBMISSION.md` is created new; the job-hunt app's tailored-CV renderer is untouched pending the post-review decision; submitted packages are never rewritten.
-
-## 7. Immediate next actions (in order)
-
-1. `HANDOVER.md` already exists at `C:\Users\Asus\.codex\worktrees\d1c6\portfolio project\HANDOVER.md` (written 2026-10-01, untracked). Create `codex/portfolio-refine` from `origin/main`; commit this file as the first commit on that branch.
-2. Append to `G:\job-hunt\HANDOVER.md` §10 as a new item:
-   `7. **Portfolio refine + classic résumé engine (2026-10-01)** — keep the old portfolio design, refine it, rebuild the résumé renderer to the 2024 classic template with dual .docx+.pdf output. Full context: C:\Users\Asus\.codex\worktrees\d1c6\portfolio project\HANDOVER.md`
-3. Execute Stage A → Stage B per §6; capture QA screenshots (both themes); render the résumé (both files); run `verify_classic.py`.
-4. **STOP for user review:** present the refined site (dev server) + the final PDF/DOCX. Only then Stage C + deploy.
-
-## 8. Commands cheat-sheet
-
-- Main checkout (old design): `cd "G:\portfolio project"; bun run dev`
-- Current worktree (noir build, reference only): `cd "C:\Users\Asus\.codex\worktrees\d1c6\portfolio project"; bun run dev -- --port 4173`
-- New branch: `git checkout -b codex/portfolio-refine origin/main`
-- Render (new engine): `G:\job-hunt\app\.venv\Scripts\python.exe G:\job-hunt\tools\render_classic.py cv G:\job-hunt\resumes\portfolio-resume.md <out>.docx` → writes `.docx` + `.pdf`
-- Verify: `G:\job-hunt\app\.venv\Scripts\python.exe G:\job-hunt\tools\verify_classic.py <out>.docx` + same for `.pdf`
-- Build / lint: `bun run build` · `npm run lint`
-
-## 9. Watch-outs / red lines
-
-- Never merge `codex/portfolio-refresh` (noir). History only.
-- `tools/*.py` is wrap-never-edit (job-hunt AGENTS.md): create wrappers; do not modify `render.py`. If a wrapper is impossible, stop and ask.
-- Job-hunt session protocol (AGENTS.md Tier-1 reads) applies before any engine work.
-- Do not push or deploy before the user's review gate.
-- Keep every existing feature (Formspree `mpwqynrn` contact form, carousels, dialogs, theme toggle). Refine, don't remove.
-- Never render work-rights claims, hospitality, retired emails, or invented numbers.
+**job-hunt (`6d95ab1`)** — `tools/render_classic.py` (new), `tools/verify_classic.py` (new), `resumes/portfolio-resume.md` (rewritten), `resumes/portfolio-resume.docx` + `.pdf` (regenerated), `HANDOVER.md` (§10 item 7).
