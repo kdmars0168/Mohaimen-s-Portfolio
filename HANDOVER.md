@@ -1,6 +1,19 @@
 # HANDOVER — Portfolio feedback round 1 (session 3, end of session)
 
-**Status:** all 13 feedback items are implemented, verified and committed on `codex/portfolio-refine`. **Nothing is pushed and nothing is deployed** — the review gate is next. The live site is still the old build.
+**Status:** all 13 feedback items are implemented, verified, merged to `main` and **LIVE on Vercel**. Mohaimen reviewed round 1 and approved it with no further feedback ("this is literally perfect").
+
+## Deployed 2026-10-01
+
+- `main` fast-forwarded to `592314e` and pushed (`2a5fa16..592314e`); Vercel production deployment
+  `mohaimen-portfolio-b31sxxv2i-…` built in 41s and is **Ready** at https://mohaimen-portfolio.vercel.app/
+- Live smoke test (headless Chrome, 1440×900): title correct, hero CTA above the fold, "Earlier
+  builds — 2023" group present, 0 cards missing snapshots, résumé viewer at **130%** with
+  "Page 1 of 2", WA Health crest loading live, **0 console errors, 0 page errors**.
+- The job-hunt engines were moved to the same format at his request: CVs now render through
+  `tools/render_classic.py` (`app/api/deterministic/render.py::RENDER_TOOL`), statements stay on
+  `tools/render.py`. `G:\job-hunt\SUBMISSION.md` records which file to upload where.
+- **Still open:** the nine existing application packages hold their pre-change CVs. Re-render a
+  package before sending, or say the word and they can all be brought to the classic format.
 **Where the work lives:** worktree `C:\Users\Asus\.codex\worktrees\d1c6\portfolio project` (branch `codex/portfolio-refine`). `G:\portfolio project` stays on `main` until deploy. Dev server: `npx vite --port 5174 --strictPort`.
 **Reference confirmed by Mohaimen:** "the previous portfolio" = the original live design (`main`) — icon-tile expertise carousel, borderless scrolling certifications, smoothly moving testimonials, system-font nav. Résumé reference: `C:\Users\Asus\Downloads\Documents\Mohaimen Rashid- RESUME 2024.pdf`.
 
