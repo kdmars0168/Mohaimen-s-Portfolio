@@ -75,6 +75,36 @@ enabled it themselves. Never reduce motion for everyone else.
 
 ## 6. Verification gates (no gate is optional)
 
+## 7. Feedback round 1 contracts (2026-10-01, session 3)
+
+- **Hero fit.** At a 1440×900 viewport (100% zoom) every hero element — name, rotating role,
+  lede, sub-line, availability, three proof stats, social icons, both CTAs and "See the work" —
+  sits at least 16px above the fold; 1366×768 is the stretch target. No `min-h-[80vh]`; spacing
+  comes from `pt-20/24 pb-10`, a two-column grid with an 18rem portrait column.
+- **Navigation.** The nav links use the system-UI stack (the previous portfolio's register) at
+  14px/15px/base across breakpoints, foreground colour, animated underline; the rest of the site
+  stays on Geist.
+- **Expertise.** Flat icon tiles (icon circle + skill name) from `skillTiles`, auto-advancing
+  drag-free carousel, Show All grid of the same tiles. No category grouping is rendered.
+- **Services.** Six services from `services` in `src/data/portfolio.ts`, each with a one-line
+  promise and three dossier-true deliverables.
+- **Work experience.** Uniform 56px logo tiles on a light backing (`object-contain`), single-column
+  hanging bullets, WA Health crest at `public/wa-health.png` (white removed).
+- **Education.** Previous look: borderless `bg-card` cards with `shadow-md`, inline logos, plain
+  timeline dots, ±50px slide-in on a section that clips horizontal overflow.
+- **Certifications.** Borderless tiles flowing in three endless columns (26–34s linear loops, the
+  middle column reversed), paused only under `prefers-reduced-motion`.
+- **Testimonials.** Arrows + progress bar retained; motion is the previous drag-free loop
+  (`dragFree: true`, `duration: 400`, Autoplay 5000, pause on hover/focus).
+- **Projects.** Every project card carries real snapshots (featured: 3 each; earlier builds: 2
+  each) served from `public/projects/`; card carousels never open the project dialog — only the
+  card body does. "Earlier builds — 2023" groups the four Motoko dApps and the two coursework
+  builds inside the All Projects dialog.
+- **Résumé viewer.** Desktop default zoom is 130% (phones stay on fit-width); the scroll frame is
+  `max-h-[85vh]`; Fit width, page indicator, Open and Download stay available.
+- **Résumé format.** The summary renders as ONE wrapped paragraph inside the full-bleed band;
+  every other section keeps ≥10pt space-before so the rules breathe like the 2024 template.
+
 1. `bun run build` — clean; `ResumeViewer-*.js` present as a separate chunk.
 2. `npm run lint` — zero errors; `npx tsc -p tsconfig.app.json --noEmit` — clean.
 3. Playwright sweep — screenshots of every section at 1440px and 390px in both themes; zero console

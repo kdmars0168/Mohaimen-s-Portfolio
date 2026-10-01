@@ -50,3 +50,35 @@ this document — neither is rendered content.
   engine output (`G:\job-hunt\tools\render_classic.py`) before the review gate.
 - Both lockfiles (`bun.lockb`, `package-lock.json`) were regenerated after adding
   react-pdf 10.2.0 and pdfjs-dist 5.4.296.
+
+## Session 3 — feedback round 1 (2026-10-01)
+
+Playwright sweep `%TEMP%\portfolio-qa\pw\session3-qa.mjs` → `session3/session3-report.json`:
+**20/20 checks true, 0 console errors, 0 page errors.**
+
+- Hero: CTA row above the fold at 1440×900 and 1366×768; nav has no overflow at either width.
+- Projects: featured cards all carry snapshots; All Projects shows 18 cards (12 + 6 earlier
+  builds) and none is missing an image; a card's own arrows move its carousel
+  (`translate3d` changes) without opening the project dialog, while the card body still opens it;
+  no background control paints above the dialog overlay.
+- Certifications: the desktop columns advance (loop), and stay still under reduced motion.
+- Testimonials: the row keeps moving and the arrows/progress still work.
+- Résumé: viewer defaults to 130% on desktop (`Page 1 of 2`), 54% fit-width on a 390px phone;
+  no horizontal overflow at 320px.
+
+Screenshots for the section contract live in `%TEMP%\portfolio-qa\session3\` (`hero-1440x900`,
+`light-*`, `dark-*`, `projects-*`, `qa-*`). Résumé PDF re-rendered by
+`G:\job-hunt\tools\render_classic.py` and re-verified (`CLASSIC VERIFY OK`, 2 pages, 905 words,
+one-paragraph summary between PROFESSIONAL SUMMARY and EDUCATION).
+
+### Snapshot provenance (all synthetic/demo data)
+
+- AI Museum WA and HealthWhisper ran locally from their repos (Flask + SQLite) with seeded demo
+  rows; Budget Tracker was captured from the public staging site.
+- DBank, DKeeper, DANG and OpenD were captured from their own front ends served locally. The
+  DFINITY SDK needs WSL and this machine only has the `docker-desktop` distro, so the canister
+  back ends were replaced by local demo actors that keep the same interfaces (notes in
+  localStorage, a ledger for DANG, a seeded NFT collection for OpenD). The UI is the projects'
+  real UI; the data is demo data. Disclosed in HANDOVER.md.
+- To-Do List (PostgreSQL) ran against a throwaway PostgreSQL cluster in `%TEMP%`; the
+  Authentication & Security app ran against the local MongoDB with a demo account.

@@ -9,7 +9,7 @@ interface EducationProps {
 
 export const Education = ({ hideTitle }: EducationProps) => {
   return (
-    <section id="education" className="py-12 px-4">
+    <section id="education" className="overflow-x-clip py-12 px-4">
       <div className="max-w-4xl mx-auto">
         {!hideTitle && (
           <div className="flex items-center justify-center gap-2 mb-8">
