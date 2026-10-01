@@ -1,75 +1,89 @@
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { Award, Plus } from "lucide-react";
 import { useState } from "react";
 import { Button } from "./ui/button";
 import { ExpandedDialog } from "./ui/dialog-content";
 import { certifications, type Certification } from "@/data/portfolio";
-import { DUR, EASE, VIEWPORT, staggerParent } from "@/lib/motion";
 
 interface CertificationsProps {
   hideTitle?: boolean;
 }
 
-const cardVariants = {
-  hidden: { opacity: 0, y: 20 },
-  show: { opacity: 1, y: 0, transition: { duration: DUR.base, ease: EASE } },
-};
-
-const CertificationCard = ({ cert }: { cert: Certification }) => (
-  <motion.div
-    variants={cardVariants}
-    whileHover={{ y: -4 }}
-    transition={{ duration: DUR.fast, ease: EASE }}
-    className="flex flex-col items-center text-center p-6 rounded-xl border bg-card/50 hover:bg-accent/40 hover:shadow-soft transition-[background-color,box-shadow]"
-  >
-    <Award className="w-8 h-8 text-primary mb-4" aria-hidden />
-    <h3 className="text-base font-semibold mb-2 leading-snug">{cert.title}</h3>
+const CertificationTile = ({ cert }: { cert: Certification }) => (
+  <div className="flex flex-col items-center rounded-lg px-4 py-6 text-center transition-colors hover:bg-accent/5">
+    <Award className="mb-4 h-8 w-8 text-primary" aria-hidden />
+    <h3 className="mb-2 text-base font-semibold leading-snug">{cert.title}</h3>
     <p className="text-sm text-muted-foreground">{cert.issuer}</p>
-    <p className="text-xs text-muted-foreground mt-2 tabular-nums">{cert.date}</p>
-  </motion.div>
+    <p className="mt-1 text-sm text-muted-foreground tabular-nums">{cert.date}</p>
+  </div>
+);
+
+const COLUMN_COUNT = 3;
+const columns = Array.from({ length: COLUMN_COUNT }, (_, column) =>
+  certifications.filter((_, index) => index % COLUMN_COUNT === column),
 );
 
 export const Certifications = ({ hideTitle }: CertificationsProps) => {
   const [showAll, setShowAll] = useState(false);
+  const prefersReduced = useReducedMotion();
 
   return (
-    <section className="py-12 px-4">
-      <div className="max-w-5xl mx-auto">
+    <section className="px-4 py-12">
+      <div className="mx-auto max-w-5xl">
         {!hideTitle && (
-          <div className="flex items-center gap-2 mb-8">
-            <Award className="w-6 h-6" />
+          <div className="mb-8 flex items-center gap-2">
+            <Award className="h-6 w-6" />
             <h2 className="text-3xl font-bold">Certifications</h2>
           </div>
         )}
 
-        <div className="flex justify-end mb-6">
+        <div className="mb-8 flex justify-end">
           <Button variant="outline" onClick={() => setShowAll(true)} className="gap-2">
-            <Plus className="w-4 h-4" /> Show All
+            <Plus className="h-4 w-4" /> Show All
           </Button>
         </div>
 
-        <motion.div
-          initial="hidden"
-          whileInView="show"
-          viewport={VIEWPORT}
-          variants={staggerParent()}
-          className="marquee-viewport relative overflow-hidden max-h-[420px] [mask-image:linear-gradient(to_bottom,transparent,black_8%,black_92%,transparent)]"
-        >
-          <div
-            className="marquee-track grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6"
-            style={{ ["--marquee-duration"]: "44s" } as React.CSSProperties}
-          >
-            {[...certifications, ...certifications].map((cert, index) => (
-              <CertificationCard key={`${cert.title}-${index}`} cert={cert} />
+        {/* Mobile: plain list, no motion */}
+        <div className="grid grid-cols-1 gap-2 md:hidden">
+          {certifications.map((cert) => (
+            <CertificationTile key={cert.title} cert={cert} />
+          ))}
+        </div>
+
+        {/* md+: three endless columns of tiles, the previous flow in a tighter register */}
+        <div className="relative hidden max-h-[440px] overflow-hidden [mask-image:linear-gradient(to_bottom,transparent,black_10%,black_90%,transparent)] md:block">
+          <div className="grid grid-cols-3 gap-6">
+            {columns.map((column, columnIndex) => (
+              <motion.div
+                key={columnIndex}
+                animate={
+                  prefersReduced
+                    ? undefined
+                    : { y: columnIndex === 1 ? ["-50%", "0%"] : ["0%", "-50%"] }
+                }
+                transition={
+                  prefersReduced
+                    ? undefined
+                    : { repeat: Infinity, duration: 26 + columnIndex * 4, ease: "linear" }
+                }
+                className="flex flex-col gap-2"
+              >
+                {[...column, ...column].map((cert, index) => (
+                  <CertificationTile
+                    key={`${columnIndex}-${index}-${cert.title}`}
+                    cert={cert}
+                  />
+                ))}
+              </motion.div>
             ))}
           </div>
-        </motion.div>
+        </div>
       </div>
 
       <ExpandedDialog isOpen={showAll} onClose={() => setShowAll(false)} title="All Certifications">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3">
           {certifications.map((cert) => (
-            <CertificationCard key={cert.title} cert={cert} />
+            <CertificationTile key={cert.title} cert={cert} />
           ))}
         </div>
       </ExpandedDialog>

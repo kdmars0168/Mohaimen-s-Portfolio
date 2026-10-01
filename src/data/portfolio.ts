@@ -108,7 +108,7 @@ export const experience: ExperienceEntry[] = [
     period: "Nov – Dec 2025",
     place: "East Perth, WA",
     context: "Communicable Disease Control Directorate · 100-hour placement",
-    logo: undefined,
+    logo: "/wa-health.png",
     bullets: [
       "Replaced a legacy Microsoft Access database governing Needle and Syringe Program approvals under the Medicines and Poisons Act 2014, delivering a SharePoint Lists system with the full historical approval record set migrated and validated against source.",
       "Mapped the end-to-end approvals workflow with the Data Systems team — intake, assessment and certificate generation — and authored a business requirements and future-plan document adopted as the directorate’s roadmap.",
@@ -437,6 +437,72 @@ export const skills: SkillGroup[] = [
     title: "Currently developing",
     note: "Where my attention is now",
     items: ["AI systems", "RAG pipelines", "LLM applications", "Prompt & token optimisation"],
+  },
+];
+
+/** Flat, ordered tile list for the Expertise carousel — derived, never hand-maintained. */
+export const skillTiles: string[] = skills.flatMap((group) => group.items);
+
+export interface ServiceEntry {
+  title: string;
+  promise: string;
+  deliverables: string[];
+}
+
+export const services: ServiceEntry[] = [
+  {
+    title: "Software & Systems Delivery",
+    promise: "From requirements to a shipped system — web apps, internal tools and integrations.",
+    deliverables: [
+      "Flask and React builds with tested authentication and data layers (AI Museum WA, HealthWhisper)",
+      "SharePoint Lists and Power Automate replacing a legacy Access approvals system (WA Department of Health)",
+      "PostgreSQL and Supabase schemas with row-level security in daily use (Combined Budget Tracker)",
+    ],
+  },
+  {
+    title: "Data & Analytics",
+    promise: "Turn operational data into decisions people can act on.",
+    deliverables: [
+      "SQL analysis and data-quality validation across enterprise and public-sector data",
+      "Power BI dashboards and reporting for operations and program performance",
+      "Statistical, predictive and decision analytics (Bachelor of Business Analytics, Deakin)",
+    ],
+  },
+  {
+    title: "Business Analysis",
+    promise: "Requirements, process design and documentation a development team can build from.",
+    deliverables: [
+      "BRDs, SRS documents and UAT reports across six enterprise projects",
+      "420+ user stories and test cases written; 320+ stakeholders engaged across two roles",
+      "BPMN 2.0 process maps and 160+ clickable prototypes used to settle design decisions early",
+    ],
+  },
+  {
+    title: "Process & Automation",
+    promise: "Remove the manual steps that cause errors and slow teams down.",
+    deliverables: [
+      "20% faster approval processing and 15% better resource allocation at CDIP through workflow redesign",
+      "Power Automate and mail merge replacing manual correspondence and certificate generation",
+      "Access, Excel and SharePoint workflow automation for approvals and reporting",
+    ],
+  },
+  {
+    title: "Project Delivery",
+    promise: "Agile delivery with the governance and reporting to match.",
+    deliverables: [
+      "Scrum delivery with a 12-member team at SELISE across sprint planning and retrospectives",
+      "ERP, CRM and HRM rollouts for a CHF 10B security group and a CHF 12B rail technology leader",
+      "Agendas, minutes, briefings and committee papers for sponsors and steering groups",
+    ],
+  },
+  {
+    title: "AI & Reporting",
+    promise: "Applied AI and reporting — RAG pipelines, LLM tooling and the analysis behind them.",
+    deliverables: [
+      "RAG pipeline and LLM application work — my current development focus",
+      "NLP, data mining and machine-learning coursework applied to real datasets",
+      "Automated analysis that turns uploaded data into charts and a written summary (HealthWhisper)",
+    ],
   },
 ];
 

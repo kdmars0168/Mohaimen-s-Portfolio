@@ -44,7 +44,7 @@ export const WorkExperience = ({ hideTitle }: WorkExperienceProps) => {
                     <img
                       src={entry.logo}
                       alt=""
-                      className="w-14 h-14 rounded-lg object-contain bg-background/70 border p-1 shrink-0"
+                      className="w-14 h-14 rounded-lg object-contain bg-white border p-1.5 shrink-0"
                       loading="lazy"
                     />
                   ) : (
@@ -64,7 +64,7 @@ export const WorkExperience = ({ hideTitle }: WorkExperienceProps) => {
                 </div>
               </div>
 
-              <ul className="grid gap-2 md:grid-cols-2 text-sm text-muted-foreground">
+              <ul className="space-y-2 text-sm text-muted-foreground">
                 {entry.bullets.map((bullet) => (
                   <li key={bullet} className="flex gap-2">
                     <span aria-hidden className="text-primary/70 leading-6">

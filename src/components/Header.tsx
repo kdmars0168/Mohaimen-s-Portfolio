@@ -79,7 +79,7 @@ export const Header = () => {
 
           <div className="flex items-center gap-3 lg:gap-5">
             {/* Navigation Links */}
-            <ul className="hidden md:flex items-center gap-4 lg:gap-6">
+            <ul className="hidden md:flex items-center gap-3 lg:gap-4 xl:gap-6">
               {links.map((link, index) => (
                 <motion.li
                   key={link.name}
@@ -95,7 +95,7 @@ export const Header = () => {
                   <a
                     href={link.href}
                     onClick={(event) => handleScroll(event, link.href)}
-                    className="text-[13px] lg:text-sm text-muted-foreground hover:text-foreground transition-colors after:content-[''] after:absolute after:-bottom-1 after:left-0 after:h-0.5 after:w-full after:origin-bottom-right after:scale-x-0 after:bg-primary after:transition-transform after:duration-300 hover:after:origin-bottom-left hover:after:scale-x-100"
+                    className="font-[system-ui] text-sm lg:text-[15px] xl:text-base text-foreground/90 hover:text-primary transition-colors after:content-[''] after:absolute after:-bottom-1 after:left-0 after:h-0.5 after:w-full after:origin-bottom-right after:scale-x-0 after:bg-primary after:transition-transform after:duration-300 hover:after:origin-bottom-left hover:after:scale-x-100"
                   >
                     {link.name}
                   </a>

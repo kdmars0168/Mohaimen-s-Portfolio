@@ -93,7 +93,8 @@ export const Testimonials = ({ hideTitle }: TestimonialsProps) => {
             opts={{
               align: "start",
               loop: true,
-              duration: 32,
+              dragFree: true,
+              duration: 400,
               skipSnaps: false,
             }}
             className="w-full"

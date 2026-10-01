@@ -60,13 +60,13 @@ export const ProfileSection = () => {
   };
 
   return (
-    <section className="min-h-[80vh] flex items-center justify-center px-4 pt-28 pb-20">
-      <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+    <section className="flex items-center justify-center px-4 pt-20 pb-10 md:pt-24">
+      <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-[minmax(0,18rem)_minmax(0,1fr)] gap-8 lg:gap-10 items-center">
         <motion.div
           initial={{ opacity: 0, scale: 0.94 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: DUR.slow, ease: EASE }}
-          className="flex justify-center md:justify-end"
+          className="flex justify-center"
           style={{ perspective: 900 }}
         >
           <motion.div
@@ -74,7 +74,7 @@ export const ProfileSection = () => {
             onMouseMove={handleTilt}
             onMouseLeave={resetTilt}
             style={{ rotateX, rotateY }}
-            className="w-48 h-48 md:w-64 md:h-64 rounded-full overflow-hidden border-4 border-accent shadow-lift hover:shadow-lift transition-shadow"
+            className="w-40 h-40 md:w-56 md:h-56 lg:w-64 lg:h-64 rounded-full overflow-hidden border-4 border-accent shadow-lift hover:shadow-lift transition-shadow"
           >
             <img
               src="/mohaimen.jpg"
@@ -98,7 +98,7 @@ export const ProfileSection = () => {
               hidden: { opacity: 0, y: 20 },
               show: { opacity: 1, y: 0, transition: { duration: DUR.base, ease: EASE } },
             }}
-            className="text-4xl md:text-5xl font-bold mb-3"
+            className="text-3xl md:text-4xl lg:text-5xl font-bold mb-3 text-balance"
           >
             {profile.name}
           </motion.h1>
@@ -123,7 +123,7 @@ export const ProfileSection = () => {
               hidden: { opacity: 0, y: 20 },
               show: { opacity: 1, y: 0, transition: { duration: DUR.base, ease: EASE } },
             }}
-            className="text-lg text-muted-foreground mb-4 max-w-prose"
+            className="text-base lg:text-lg text-muted-foreground mb-4 max-w-prose"
           >
             {profile.lede}
           </motion.p>
@@ -133,7 +133,7 @@ export const ProfileSection = () => {
               hidden: { opacity: 0, y: 20 },
               show: { opacity: 1, y: 0, transition: { duration: DUR.base, ease: EASE } },
             }}
-            className="text-sm text-muted-foreground mb-8"
+            className="text-sm text-muted-foreground mb-6"
           >
             {profile.subline}
             <span className="block mt-1 text-foreground/80">{profile.availability}</span>
@@ -144,12 +144,12 @@ export const ProfileSection = () => {
               hidden: { opacity: 0, y: 20 },
               show: { opacity: 1, y: 0, transition: { duration: DUR.base, ease: EASE } },
             }}
-            className="grid grid-cols-3 gap-4 mb-8 max-w-md"
+            className="grid grid-cols-3 gap-4 mb-6 max-w-md"
           >
             {proof.map((item) => (
               <div key={item.label} className="border-l-2 border-border pl-3">
                 <dt className="sr-only">{item.label}</dt>
-                <dd className="text-2xl font-bold text-primary leading-none">{item.value}</dd>
+                <dd className="text-xl font-bold text-primary leading-none">{item.value}</dd>
                 <dd className="text-xs text-muted-foreground mt-1 leading-snug">
                   {item.label}
                 </dd>
@@ -162,7 +162,7 @@ export const ProfileSection = () => {
               hidden: { opacity: 0, y: 20 },
               show: { opacity: 1, y: 0, transition: { duration: DUR.base, ease: EASE } },
             }}
-            className="flex flex-wrap items-center gap-6 mb-8"
+            className="flex flex-wrap items-center gap-6 mb-6"
           >
             {socialLinks.map((link) => (
               <motion.a
